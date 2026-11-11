@@ -1,0 +1,31 @@
+{
+  "skill_name": "email-teacher",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Mai em bị sốt cao không lên lớp môn Cấu trúc dữ liệu của thầy Hưng được, nhờ viết giúp bức thư xin phép nghỉ",
+      "expected_output": "Thư xin nghỉ học trang trọng gửi thầy Hưng kèm tiêu đề chuẩn, lý do ốm sốt, và cam kết tự học lại bài",
+      "assertions": [
+        "Tiêu đề thư theo đúng quy tắc [Tên môn] - [Mục đích] - [Họ tên]",
+        "Có phần kính gửi trang trọng và xưng hô chuẩn mực",
+        "Có kế hoạch mượn bài/tự học bù nội dung buổi vắng"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "I need to ask Professor David for a 3-day extension on my machine learning project due to hardware failure",
+      "expected_output": "A formal English email to Professor David with clear subject line, progress summary, reason, and realistic deadline proposal",
+      "assertions": [
+        "The email is written in fluent academic English",
+        "Includes current project progress and precise new deadline",
+        "Maintains professional and respectful tone"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "Viết email từ chối lời mời phỏng vấn xin việc tại công ty ABC",
+      "expected_output": "The agent drafts a job interview decline email directly without triggering email-teacher",
+      "should_trigger": false
+    }
+  ]
+}

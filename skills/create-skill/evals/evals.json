@@ -1,0 +1,26 @@
+{
+  "skill_name": "create-skill",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Tạo cho tôi một skill mới tên là docker-compose-runner để tự động tạo file docker-compose.yml và khởi chạy container",
+      "expected_output": "A complete skill directory named docker-compose-runner with valid SKILL.md, appropriate frontmatter, and scaffolding",
+      "assertions": [
+        "The generated directory name is docker-compose-runner",
+        "The SKILL.md contains valid YAML frontmatter with name and description",
+        "The name field does not contain uppercase letters or consecutive hyphens",
+        "The description specifies when the agent should activate the skill"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Create an agent skill for reviewing pull requests according to OWASP security guidelines",
+      "expected_output": "A skill named security-pr-reviewer or similar with kebab-case, structured instructions, and reference files",
+      "assertions": [
+        "The skill name adheres to kebab-case (max 64 characters)",
+        "The SKILL.md body contains structured step-by-step workflow",
+        "The file length is under 500 lines"
+      ]
+    }
+  ]
+}

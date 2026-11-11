@@ -1,0 +1,20 @@
+{
+  "skill_name": "{{SKILL_NAME}}",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "User query that should trigger this skill",
+      "expected_output": "Description of the expected correct output",
+      "assertions": [
+        "The primary task was completed",
+        "Required files or output formats exist"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Near-miss user query that should NOT trigger this skill",
+      "expected_output": "Agent should handle via normal knowledge or another skill without activating this skill",
+      "should_trigger": false
+    }
+  ]
+}

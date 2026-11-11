@@ -1,6 +1,7 @@
 ---
 name: email-teacher
 description: Soạn thảo email và thông điệp chuẩn mực gửi giảng viên, thầy cô giáo về các vấn đề học tập (xin nghỉ học, xin phép vắng mặt, xin gia hạn nộp bài tập lớn/đồ án/deadline, hoặc hỏi bài, giải đáp thắc mắc bài giảng). Tự động kích hoạt ngay cả khi người dùng không dùng từ khóa "email" (ví dụ "xin nghỉ học hôm nay", "nhờ thầy dời hạn nộp bài", "hỏi cô câu hỏi lab 3", "sick leave note for teacher", "ask professor for deadline extension"). Mẫu quy chuẩn bằng tiếng Việt và tự động thích ứng theo ngôn ngữ của người dùng.
+license: MIT
 ---
 
 # Email Teacher (Soạn Thư Gửi Giảng Viên / Thầy Cô)

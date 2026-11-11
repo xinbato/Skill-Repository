@@ -1,4 +1,8 @@
 #!/usr/bin/env python3
+# /// script
+# requires-python = ">=3.9"
+# dependencies = []
+# ///
 """
 Inspects git status and diff, providing a structured breakdown
 to help AI agents or developers craft accurate Conventional Commit messages.
@@ -20,10 +24,10 @@ def run_git_cmd(args):
             errors="replace",
         )
         return res.stdout
-    except subprocess.CalledProcessError as e:
+    except subprocess.CalledProcessError:
         return ""
     except FileNotFoundError:
-        print("Git is not installed or not in PATH.", file=sys.stderr)
+        print("[ERROR] Git is not installed or not in PATH.", file=sys.stderr)
         sys.exit(1)
 
 
@@ -113,7 +117,7 @@ def analyze_changes():
 
     scope_str = f"({suggested_scope})" if suggested_scope else ""
     print(
-        f"\n💡 Suggested Commit Header: {suggested_type}{scope_str}: <imperative description>"
+        f"\n[SUGGESTION] Commit Header: {suggested_type}{scope_str}: <imperative description>"
     )
 
 

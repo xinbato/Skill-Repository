@@ -1,6 +1,7 @@
 ---
 name: git-workflow
-description: Streamlines Git operations: analyzes diff and status, generates Conventional Commit messages, crafts Pull Request descriptions, and guides branching. Use when the user asks to commit changes, write commit messages, review git diff, prepare PRs, or handle git workflow tasks.
+description: Streamlines Git operations: analyzes diff and status, generates Conventional Commit messages, crafts Pull Request descriptions, and guides safe branching. Use when the user asks to commit changes, write commit messages, review git diff, prepare PRs, or handle git workflow tasks.
+license: MIT
 ---
 
 # Git Workflow & Commit Helper
@@ -9,9 +10,10 @@ description: Streamlines Git operations: analyzes diff and status, generates Con
 This skill guides the AI Agent and user through clean, production-grade Git practices. It automates status analysis, enforces Conventional Commits (`feat:`, `fix:`, `docs:`, etc.), safeguards sensitive files from accidental commits, and structures clear Pull Requests.
 
 ## When to Use
-- User asks: *"Commit code giúp tôi"*, *"Tạo commit message"*, *"Chuẩn bị PR"*, *"Kiểm tra git diff"*, *"Tạo nhánh mới"*.
+- User asks: "Commit code giúp tôi", "Tạo commit message", "Chuẩn bị PR", "Kiểm tra git diff", "Tạo nhánh mới".
 - After finishing a development task and changes are ready to be saved to version control.
 - When generating changelogs or reviewing modified files.
+- When NOT to use: For general Git tutorial questions that do not involve interacting with an actual repository.
 
 ---
 
@@ -58,7 +60,15 @@ Construct a message following [conventional_commits.md](references/conventional_
 
 ---
 
+## Gotchas
+- On Windows, Git may warn about LF/CRLF replacement (`warning: LF will be replaced by CRLF`). This is normal and harmless; do not treat it as a build failure.
+- Never run blanket `git add .` without checking untracked files for secrets, tokens, or large binary artifacts.
+- When working with detached HEAD or rebase conflicts, inspect `git status` before attempting further commits.
+
+---
+
 ## References & Assets
-- Detailed Commit Standards: [conventional_commits.md](references/conventional_commits.md)
+- Commit Standards: [conventional_commits.md](references/conventional_commits.md)
 - PR Markdown Template: [pull_request_template.md](assets/pull_request_template.md)
 - Helper Script: `scripts/git_diff_summary.py`
+- Test Suite: `evals/evals.json`

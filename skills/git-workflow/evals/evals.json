@@ -1,0 +1,21 @@
+{
+  "skill_name": "git-workflow",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Tôi vừa sửa xong tính năng đăng nhập bằng Google OAuth và viết tài liệu, hãy kiểm tra diff và gợi ý commit giúp tôi",
+      "expected_output": "Agent analyzes git diff, identifies feature and doc changes, and generates a feat(auth) Conventional Commit message without committing sensitive keys",
+      "assertions": [
+        "The suggested commit message starts with feat or docs",
+        "The subject line uses imperative mood and no trailing period",
+        "The agent checks for sensitive files before suggesting git add"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "How do I configure my nginx reverse proxy for SSL?",
+      "expected_output": "The agent answers the technical nginx question directly without invoking git-workflow",
+      "should_trigger": false
+    }
+  ]
+}
