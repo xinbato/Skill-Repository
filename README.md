@@ -63,14 +63,16 @@ Skill-Repository/
     │       ├── template_SKILL.md     # Reusable SKILL.md template
     │       ├── template_script.py    # Reusable Python script template
     │       └── template_reference.md # Reusable reference guide template
-    └── git-workflow/                 # 🌿 Skill 2: Git & Conventional Commits Helper
-        ├── SKILL.md                  # Execution instructions & safety checks
-        ├── scripts/
-        │   └── git_diff_summary.py   # Diff analyzer & commit type detector
-        ├── references/
-        │   └── conventional_commits.md # Specification & commit standards
-        └── assets/
-            └── pull_request_template.md # Standard GitHub PR template
+    ├── git-workflow/                 # 🌿 Skill 2: Git & Conventional Commits Helper
+    │   ├── SKILL.md                  # Execution instructions & safety checks
+    │   ├── scripts/
+    │   │   └── git_diff_summary.py   # Diff analyzer & commit type detector
+    │   ├── references/
+    │   │   └── conventional_commits.md # Specification & commit standards
+    │   └── assets/
+    │       └── pull_request_template.md # Standard GitHub PR template
+    └── email-teacher/                # 🎓 Skill 3: Academic Teacher Communication
+        └── SKILL.md                  # YAML metadata & multi-language templates
 ```
 
 ---
@@ -107,6 +109,7 @@ git sparse-checkout set skills/create-skill
 | :--- | :--- | :--- | :--- |
 | **[`create-skill`](skills/create-skill/)** | Generates standard-compliant Agent Skills with directory structures, metadata, scripts, and references. | Developer Tooling | [Explore](skills/create-skill/SKILL.md) |
 | **[`git-workflow`](skills/git-workflow/)** | Analyzes git diffs, enforces Conventional Commits (`feat:`, `fix:`, etc.), prevents secret leaks, and prepares PRs. | Version Control / DevOps | [Explore](skills/git-workflow/SKILL.md) |
+| **[`email-teacher`](skills/email-teacher/)** | Crafts professional academic messages/emails to instructors (sick leave, extensions, queries) across multiple languages without needing the keyword "email". | Academic / Communication | [Explore](skills/email-teacher/SKILL.md) |
 
 ---
 
