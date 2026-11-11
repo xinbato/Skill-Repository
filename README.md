@@ -52,17 +52,25 @@ Skill-Repository/
 ├── SKILLS_MAP.md                     # 🗺️ Portable dynamic router for AI agents
 ├── README.md                         # 📖 Repository documentation & guide
 └── skills/                           # 📦 Collection of Agent Skills
-    └── create-skill/                 # 🛠️ Skill 1: Automated Skill Generator
-        ├── SKILL.md                  # YAML metadata & execution instructions
+    ├── create-skill/                 # 🛠️ Skill 1: Automated Skill Generator
+    │   ├── SKILL.md                  # YAML metadata & execution instructions
+    │   ├── scripts/
+    │   │   └── init_skill.py         # Cross-platform CLI scaffolding tool
+    │   ├── references/
+    │   │   ├── specification.md      # agentskills.io standard spec
+    │   │   └── prompting_guidelines.md # Prompt & instruction best practices
+    │   └── assets/
+    │       ├── template_SKILL.md     # Reusable SKILL.md template
+    │       ├── template_script.py    # Reusable Python script template
+    │       └── template_reference.md # Reusable reference guide template
+    └── git-workflow/                 # 🌿 Skill 2: Git & Conventional Commits Helper
+        ├── SKILL.md                  # Execution instructions & safety checks
         ├── scripts/
-        │   └── init_skill.py         # Cross-platform CLI scaffolding tool
+        │   └── git_diff_summary.py   # Diff analyzer & commit type detector
         ├── references/
-        │   ├── specification.md      # agentskills.io standard spec
-        │   └── prompting_guidelines.md # Prompt & instruction best practices
+        │   └── conventional_commits.md # Specification & commit standards
         └── assets/
-            ├── template_SKILL.md     # Reusable SKILL.md template
-            ├── template_script.py    # Reusable Python script template
-            └── template_reference.md # Reusable reference guide template
+            └── pull_request_template.md # Standard GitHub PR template
 ```
 
 ---
@@ -98,6 +106,7 @@ git sparse-checkout set skills/create-skill
 | Skill | Description | Category | Link |
 | :--- | :--- | :--- | :--- |
 | **[`create-skill`](skills/create-skill/)** | Generates standard-compliant Agent Skills with directory structures, metadata, scripts, and references. | Developer Tooling | [Explore](skills/create-skill/SKILL.md) |
+| **[`git-workflow`](skills/git-workflow/)** | Analyzes git diffs, enforces Conventional Commits (`feat:`, `fix:`, etc.), prevents secret leaks, and prepares PRs. | Version Control / DevOps | [Explore](skills/git-workflow/SKILL.md) |
 
 ---
 

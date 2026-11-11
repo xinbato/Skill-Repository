@@ -25,6 +25,7 @@ Whenever the user asks you to perform a task:
 | Skill Name | Description & Trigger Keywords | Category | Direct Raw URL |
 | :--- | :--- | :--- | :--- |
 | **`create-skill`** | **Tạo và chuẩn hóa Agent Skill mới**. Sử dụng khi người dùng yêu cầu: *"Tạo skill mới"*, *"Khởi tạo skill [tên]"*, *"Scaffold skill"*, *"Viết SKILL.md theo chuẩn"*. Tự động tạo cấu trúc thư mục, script CLI, tài liệu tham khảo và metadata hợp lệ. | Developer Tooling | [Fetch Raw](https://raw.githubusercontent.com/xinbato/Skill-Repository/main/skills/create-skill/SKILL.md) |
+| **`git-workflow`** | **Chuẩn hóa quy trình Git & Conventional Commits**. Sử dụng khi người dùng yêu cầu: *"Commit code"*, *"Tạo commit message"*, *"Chuẩn bị PR"*, *"Kiểm tra git diff"*, *"Tạo nhánh mới"*. Tự động phân tích git status/diff, chặn commit lộ secret, viết commit message chuẩn và sinh mẫu PR description. | Version Control / DevOps | [Fetch Raw](https://raw.githubusercontent.com/xinbato/Skill-Repository/main/skills/git-workflow/SKILL.md) |
 
 *(More skills will be added here as the repository grows).*
 
