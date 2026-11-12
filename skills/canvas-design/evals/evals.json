@@ -1,0 +1,21 @@
+{
+  "skill_name": "canvas-design",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Tạo file PDF thiết kế poster sự kiện công nghệ Tech Summit 2026 với bố cục tối giản hiện đại",
+      "expected_output": "Script or instructions to generate visual poster in PNG or PDF with strict design philosophy.",
+      "assertions": [
+        "Specifies grid alignment and spacing",
+        "Maintains typographic scale and hierarchy",
+        "Targets output to PNG or PDF document"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Giải bài toán tìm đường đi ngắn nhất Dijkstra",
+      "expected_output": "Agent answers algorithm question without invoking canvas-design",
+      "should_trigger": false
+    }
+  ]
+}

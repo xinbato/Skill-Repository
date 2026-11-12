@@ -1,0 +1,21 @@
+{
+  "skill_name": "algorithmic-art",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Tạo một tác phẩm generative art bằng p5.js với chủ đề dòng chảy lượng tử (quantum flow field) có thể tương tác với chuột",
+      "expected_output": "Complete runnable p5.js sketch using seeded randomness and interactive mouse/key listeners.",
+      "assertions": [
+        "Uses p5.js setup/draw lifecycle",
+        "Implements algorithmic flow field math",
+        "Includes seeded randomness or interactive parameter exploration"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Tối ưu hóa chỉ mục cơ sở dữ liệu MySQL",
+      "expected_output": "Agent does not invoke algorithmic-art",
+      "should_trigger": false
+    }
+  ]
+}

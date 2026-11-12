@@ -1,0 +1,21 @@
+{
+  "skill_name": "security-threat-model",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Phân tích mã nguồn backend API này và lập bảng Threat Model theo mô hình STRIDE, chỉ ra các trust boundaries",
+      "expected_output": "Structured threat model document identifying assets, trust boundaries, threat scenarios, and mitigations.",
+      "assertions": [
+        "Enumerates system trust boundaries and data flows",
+        "Categorizes threats according to attack vectors",
+        "Maps threats to concrete technical mitigations"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Hướng dẫn cài đặt Node.js trên Ubuntu",
+      "expected_output": "Agent answers setup question without invoking threat modeling",
+      "should_trigger": false
+    }
+  ]
+}

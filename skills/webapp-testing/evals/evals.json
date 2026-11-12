@@ -1,0 +1,21 @@
+{
+  "skill_name": "webapp-testing",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Kiểm tra tính năng đăng nhập trên webapp local tại http://localhost:3000 bằng Playwright, chụp ảnh màn hình khi đăng nhập thất bại",
+      "expected_output": "Playwright test execution steps, capturing failure screenshots, and reporting UI errors.",
+      "assertions": [
+        "Navigates to localhost:3000",
+        "Checks login form input fields and submit button",
+        "Captures screenshot upon test failure"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Tạo file Word báo cáo doanh thu quý 3",
+      "expected_output": "Agent does not invoke webapp-testing",
+      "should_trigger": false
+    }
+  ]
+}

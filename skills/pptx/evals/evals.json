@@ -1,0 +1,29 @@
+{
+  "skill_name": "pptx",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Tạo slide thuyết trình giới thiệu sản phẩm mới gồm 5 slide: Tiêu đề, Vấn đề, Giải pháp, Thị trường, Kêu gọi hành động",
+      "expected_output": "A .pptx presentation file containing 5 distinct slides with clear layout and readable typography",
+      "assertions": [
+        "The presentation contains exactly 5 slides",
+        "Slide titles match the requested outline",
+        "The output file is a valid .pptx file"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Trích xuất ghi chú của người thuyết trình (speaker notes) từ file pitch_deck.pptx",
+      "expected_output": "A structured list of speaker notes corresponding to each slide in the presentation",
+      "assertions": [
+        "Notes are extracted and organized by slide number"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "Vẽ biểu đồ wireframe UI trên Figma",
+      "expected_output": "Agent recognizes this is a UI design request and does not invoke pptx skill",
+      "should_trigger": false
+    }
+  ]
+}

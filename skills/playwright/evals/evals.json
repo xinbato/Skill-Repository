@@ -1,0 +1,21 @@
+{
+  "skill_name": "playwright",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Mở trình duyệt truy cập https://news.ycombinator.com, cào tiêu đề top 5 bài viết và chụp ảnh màn hình trang chủ",
+      "expected_output": "Playwright automation script navigating to the URL, extracting article titles, and saving a screenshot.",
+      "assertions": [
+        "Automates browser navigation via Playwright",
+        "Extracts text from target DOM elements",
+        "Captures and saves screenshot image file"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Giải phương trình bậc 2",
+      "expected_output": "Agent solves equation without invoking playwright",
+      "should_trigger": false
+    }
+  ]
+}

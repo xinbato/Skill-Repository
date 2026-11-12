@@ -1,0 +1,21 @@
+{
+  "skill_name": "theme-factory",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Áp dụng theme phong cách Cyberpunk hoặc Minimal Mono cho tài liệu báo cáo kỹ thuật HTML này",
+      "expected_output": "CSS / theme palette variables with appropriate background, text, accent colors and typography rules.",
+      "assertions": [
+        "Contains cohesive hex color codes",
+        "Specifies typography and font family pairings",
+        "Provides ready-to-use CSS variables or styled classes"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Cấu hình Dockerfile cho ứng dụng Python",
+      "expected_output": "Agent answers docker question directly without invoking theme-factory",
+      "should_trigger": false
+    }
+  ]
+}

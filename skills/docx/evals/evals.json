@@ -1,0 +1,29 @@
+{
+  "skill_name": "docx",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Tạo một báo cáo kinh doanh quý 4 dưới dạng file Word report.docx có tiêu đề, mục lục và bảng biểu doanh thu",
+      "expected_output": "A polished .docx document with proper heading hierarchy, styled table, and valid formatting",
+      "assertions": [
+        "The file report.docx is generated",
+        "Headings use built-in HeadingLevel styles",
+        "Tables have explicit columnWidths"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Trích xuất nội dung văn bản từ tài liệu quy chế congty.docx",
+      "expected_output": "Clean markdown representation of the text content inside the Word file",
+      "assertions": [
+        "All text sections are extracted accurately"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "Tính tổng doanh thu và vẽ biểu đồ trong file sales.xlsx",
+      "expected_output": "Agent recognizes this is a spreadsheet task and does not invoke docx skill",
+      "should_trigger": false
+    }
+  ]
+}

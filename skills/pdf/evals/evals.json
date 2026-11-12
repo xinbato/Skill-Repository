@@ -1,0 +1,29 @@
+{
+  "skill_name": "pdf",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Trích xuất toàn bộ văn bản và danh sách các bảng biểu từ file document.pdf",
+      "expected_output": "Text content extracted from pages with table structures clearly delineated",
+      "assertions": [
+        "Text content from all pages is preserved",
+        "Tables are formatted cleanly in markdown or structured text"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Gộp file report_part1.pdf và report_part2.pdf thành file final_report.pdf",
+      "expected_output": "A merged PDF file named final_report.pdf containing pages from both input files in order",
+      "assertions": [
+        "The output file final_report.pdf exists",
+        "The total page count matches the sum of input page counts"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "Chỉnh sửa tài liệu hợp đồng trong file contract.docx",
+      "expected_output": "Agent recognizes this is a Word document and does not invoke pdf skill",
+      "should_trigger": false
+    }
+  ]
+}

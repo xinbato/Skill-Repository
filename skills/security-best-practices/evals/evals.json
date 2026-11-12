@@ -1,0 +1,21 @@
+{
+  "skill_name": "security-best-practices",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Rà soát mã nguồn Python FastAPI này xem có lỗ hổng SQL Injection hay thiếu xác thực JWT không",
+      "expected_output": "Security review report highlighting specific code vulnerabilities with remediation code diffs.",
+      "assertions": [
+        "Checks for parameterized SQL queries",
+        "Verifies JWT token signature and expiration handling",
+        "Provides secure-by-default code remediation examples"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Viết bài thơ về mùa thu Hà Nội",
+      "expected_output": "Agent writes a poem without invoking security-best-practices",
+      "should_trigger": false
+    }
+  ]
+}

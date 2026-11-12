@@ -1,0 +1,29 @@
+{
+  "skill_name": "xlsx",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Đọc file data.xlsx, thêm cột Tỉ suất lợi nhuận = (Doanh thu - Chi phí) / Doanh thu và lưu lại",
+      "expected_output": "Updated Excel spreadsheet with calculated profit margin column and preserved formatting",
+      "assertions": [
+        "The calculated column contains valid Excel formulas or evaluated figures",
+        "The original data rows remain intact"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Dọn dẹp file CSV raw_users.csv có nhiều dòng trống và xuất ra file Excel users_clean.xlsx",
+      "expected_output": "A clean .xlsx file with proper header row, trimmed whitespace, and no empty ghost rows",
+      "assertions": [
+        "Empty rows are removed",
+        "The file is saved as valid xlsx"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "Viết mã nguồn kết nối database PostgreSQL và insert dữ liệu",
+      "expected_output": "Agent recognizes this is backend ETL code and does not invoke xlsx skill",
+      "should_trigger": false
+    }
+  ]
+}

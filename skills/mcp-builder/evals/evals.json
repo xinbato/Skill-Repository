@@ -1,0 +1,21 @@
+{
+  "skill_name": "mcp-builder",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Viết một MCP server bằng Python FastMCP cung cấp tool tra cứu thời tiết và resource cấu hình hệ thống",
+      "expected_output": "Complete Python FastMCP server script defining tools, type annotations, and error handling.",
+      "assertions": [
+        "Uses FastMCP tool and resource decorators",
+        "Provides complete type annotations and docstrings",
+        "Handles API failures and invalid parameters gracefully"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Soạn thảo email xin nghỉ ốm gửi thầy giáo",
+      "expected_output": "Agent invokes email-teacher, not mcp-builder",
+      "should_trigger": false
+    }
+  ]
+}

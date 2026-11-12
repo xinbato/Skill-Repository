@@ -1,0 +1,21 @@
+{
+  "skill_name": "frontend-design",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Tôi muốn thiết kế trang landing page cho ứng dụng SaaS quản lý công việc, hướng dẫn tôi chọn bảng màu, typography và bố cục tránh cảm giác rập khuôn AI",
+      "expected_output": "Specific aesthetic direction with distinct font pairings, cohesive color palette, and layout principles avoiding generic AI design patterns.",
+      "assertions": [
+        "Mentions specific font pairings and typography rules",
+        "Avoids generic purple/blue gradients or clichéd tropes",
+        "Provides intentional layout hierarchy"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Viết truy vấn SQL SELECT * FROM users WHERE active = 1",
+      "expected_output": "Agent writes the SQL query without invoking frontend-design skill",
+      "should_trigger": false
+    }
+  ]
+}
