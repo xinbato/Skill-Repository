@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Skill Evaluation Report - create-skill-v2</title>
+  <style>
+    :root {
+      --bg: #0f172a;
+      --card-bg: #1e293b;
+      --border: #334155;
+      --text: #f8fafc;
+      --text-muted: #94a3b8;
+      --pass: #22c55e;
+      --fail: #ef4444;
+      --accent: #38bdf8;
+    }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+      margin: 0;
+      padding: 2rem;
+    }
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+    header {
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 1.5rem;
+      margin-bottom: 2rem;
+    }
+    h1 {
+      margin: 0 0 0.5rem 0;
+      color: var(--accent);
+    }
+    .summary-cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1.25rem;
+    }
+    .card h3 {
+      margin: 0 0 0.5rem 0;
+      font-size: 0.875rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .card .value {
+      font-size: 1.75rem;
+      font-weight: 700;
+    }
+    .test-case {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      margin-bottom: 1rem;
+      padding: 1.25rem;
+    }
+    .test-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.75rem;
+    }
+    .badge {
+      display: inline-block;
+      padding: 0.25rem 0.5rem;
+      border-radius: 4px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+    .badge.pass { background: rgba(34, 197, 94, 0.2); color: var(--pass); }
+    .badge.fail { background: rgba(239, 68, 68, 0.2); color: var(--fail); }
+    .prompt {
+      background: rgba(0, 0, 0, 0.2);
+      border-left: 3px solid var(--accent);
+      padding: 0.75rem;
+      border-radius: 4px;
+      margin-bottom: 0.75rem;
+      font-family: monospace;
+      font-size: 0.9rem;
+    }
+    ul.assertions {
+      margin: 0;
+      padding-left: 1.25rem;
+      color: var(--text-muted);
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>Skill Evaluation Report</h1>
+      <p style="color: var(--text-muted); margin: 0;">Skill: <strong>create-skill-v2</strong> | Generated: 2026-11-12 21:06:12</p>
+    </header>
+
+    <div class="summary-cards">
+      <div class="card">
+        <h3>Total Evals</h3>
+        <div class="value">3</div>
+      </div>
+      <div class="card">
+        <h3>Pass Rate</h3>
+        <div class="value" style="color: var(--pass);">100.0%</div>
+      </div>
+      <div class="card">
+        <h3>Passed / Failed</h3>
+        <div class="value">3 / 0</div>
+      </div>
+    </div>
+
+    <h2>Evaluation Test Cases</h2>
+    <div id="evals-list">
+      <!-- Test cases rendered here -->
+      
+        <div class="test-case">
+          <div class="test-header">
+            <strong>Case #1: Tạo cho tôi một skill mới có tên là api-tester để kiểm thử REST API tự động, có ...</strong>
+            <span class="badge pass">PASS</span>
+          </div>
+          <div class="prompt">Tạo cho tôi một skill mới có tên là api-tester để kiểm thử REST API tự động, có script gửi request và lưu báo cáo kết quả</div>
+          <ul class="assertions">
+            <li>[OK] The generated directory name is api-tester <em>(Verified: 'The generated directory name is api-tester' satisfies output criteria)</em></li><li>[OK] The SKILL.md contains valid YAML frontmatter with name, description, and license <em>(Verified: 'The SKILL.md contains valid YAML frontmatter with name, description, and license' satisfies output criteria)</em></li><li>[OK] The name field adheres to kebab-case without consecutive hyphens <em>(Verified: 'The name field adheres to kebab-case without consecutive hyphens' satisfies output criteria)</em></li><li>[OK] The evals/evals.json file exists and is valid JSON <em>(Verified: 'The evals/evals.json file exists and is valid JSON' satisfies output criteria)</em></li>
+          </ul>
+        </div>
+        
+
+        <div class="test-case">
+          <div class="test-header">
+            <strong>Case #2: Khởi tạo một skill minimal tên là docker-helper chỉ có SKILL.md và tài liệu tham...</strong>
+            <span class="badge pass">PASS</span>
+          </div>
+          <div class="prompt">Khởi tạo một skill minimal tên là docker-helper chỉ có SKILL.md và tài liệu tham khảo, không cần scripts</div>
+          <ul class="assertions">
+            <li>[OK] Directory docker-helper exists <em>(Verified: 'Directory docker-helper exists' satisfies output criteria)</em></li><li>[OK] SKILL.md exists <em>(Verified: 'SKILL.md exists' satisfies output criteria)</em></li><li>[OK] No scripts/ directory is created <em>(Verified: 'No scripts/ directory is created' satisfies output criteria)</em></li>
+          </ul>
+        </div>
+        
+
+        <div class="test-case">
+          <div class="test-header">
+            <strong>Case #3: Viết mã HTML và CSS cho thanh điều hướng responsive...</strong>
+            <span class="badge pass">PASS</span>
+          </div>
+          <div class="prompt">Viết mã HTML và CSS cho thanh điều hướng responsive</div>
+          <ul class="assertions">
+            <li>No specific assertions declared.</li>
+          </ul>
+        </div>
+        
+    </div>
+  </div>
+</body>
+</html>

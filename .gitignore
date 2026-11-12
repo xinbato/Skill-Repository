@@ -32,3 +32,5 @@ Thumbs.db
 # Temporary agent files
 .agent-skills-temp/
 .temp-skills/
+.agents/teamwork/
+*/evals/output/

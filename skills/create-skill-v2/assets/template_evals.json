@@ -1,0 +1,21 @@
+{
+  "skill_name": "{{SKILL_NAME}}",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Detailed user prompt that should explicitly trigger {{SKILL_NAME}}",
+      "expected_output": "Description of the expected correct and complete result",
+      "assertions": [
+        "The primary task was completed",
+        "Required files or output formats exist",
+        "No internal errors occurred"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Unrelated or near-miss user query that should NOT trigger {{SKILL_NAME}}",
+      "expected_output": "Agent should handle via normal knowledge without activating {{SKILL_NAME}}",
+      "should_trigger": false
+    }
+  ]
+}

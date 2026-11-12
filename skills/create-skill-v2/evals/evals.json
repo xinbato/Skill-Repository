@@ -1,0 +1,32 @@
+{
+  "skill_name": "create-skill-v2",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Tạo cho tôi một skill mới có tên là api-tester để kiểm thử REST API tự động, có script gửi request và lưu báo cáo kết quả",
+      "expected_output": "A complete skill directory named api-tester generated via init_skill.py with valid YAML frontmatter, dynamic template substitution, and evals suite",
+      "assertions": [
+        "The generated directory name is api-tester",
+        "The SKILL.md contains valid YAML frontmatter with name, description, and license",
+        "The name field adheres to kebab-case without consecutive hyphens",
+        "The evals/evals.json file exists and is valid JSON"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Khởi tạo một skill minimal tên là docker-helper chỉ có SKILL.md và tài liệu tham khảo, không cần scripts",
+      "expected_output": "Skill directory docker-helper created with --no-scripts flag",
+      "assertions": [
+        "Directory docker-helper exists",
+        "SKILL.md exists",
+        "No scripts/ directory is created"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "Viết mã HTML và CSS cho thanh điều hướng responsive",
+      "expected_output": "The agent writes navigation bar code directly without activating create-skill-v2",
+      "should_trigger": false
+    }
+  ]
+}

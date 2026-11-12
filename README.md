@@ -54,7 +54,8 @@ Skill-Repository/
 ├── README.md                         # Repository documentation and guide
 ├── LICENSE                           # Open source MIT license
 └── skills/                           # Collection of Agent Skills
-    ├── create-skill/                 # Meta-skill to scaffold and test new skills
+    ├── create-skill/                 # Meta-skill to scaffold and test new skills (v1)
+    ├── create-skill-v2/              # Next-gen skill generator with dynamic templates & eval runner
     ├── git-workflow/                 # Git operations and Conventional Commits helper
     ├── email-teacher/                # Academic correspondence for students
     ├── pdf/                          # PDF document reading, splitting, merging, and forms
@@ -104,6 +105,7 @@ git sparse-checkout set skills/create-skill
 
 | Skill | Description | Category | Link |
 | :--- | :--- | :--- | :--- |
+| **[`create-skill-v2`](skills/create-skill-v2/)** | Next-gen skill generator with dynamic templates, Windows-safe eval runner (`run_eval.py`), and HTML reports. | Developer Tooling | [Explore](skills/create-skill-v2/SKILL.md) |
 | **[`create-skill`](skills/create-skill/)** | Generates standard-compliant Agent Skills with directory structures, metadata, scripts, evals, and references. | Developer Tooling | [Explore](skills/create-skill/SKILL.md) |
 | **[`git-workflow`](skills/git-workflow/)** | Analyzes git diffs, enforces Conventional Commits (`feat:`, `fix:`, etc.), prevents secret leaks, and prepares PRs. | Version Control / DevOps | [Explore](skills/git-workflow/SKILL.md) |
 | **[`email-teacher`](skills/email-teacher/)** | Drafts respectful, academic-grade correspondence to professors and teachers for leaves, extensions, and questions. | Academic / Communication | [Explore](skills/email-teacher/SKILL.md) |
@@ -123,19 +125,19 @@ git sparse-checkout set skills/create-skill
 
 ---
 
-## Deep Dive: `create-skill`
+## Deep Dive: `create-skill-v2`
 
-The foundational skill in this repository is **`create-skill`** — a meta-skill designed to build new skills.
+The flagship meta-skill in this repository is **`create-skill-v2`** — designed to build, evaluate, and optimize standard-compliant Agent Skills.
 
-### What it does:
-- Validates skill naming (`kebab-case`, 1-64 chars, no consecutive hyphens).
-- Sets up standard subdirectories: `scripts/`, `references/`, `assets/`, `evals/`.
-- Authors valid YAML frontmatter optimized for the **Discovery** stage.
-- Includes `scripts/init_skill.py` to automate folder generation.
+### Key Enhancements over v1:
+- **Dynamic Asset Templates**: Replaces hardcoded strings by dynamically loading from `assets/template_*`.
+- **Windows-Safe Evaluation Runner (`scripts/run_eval.py`)**: Runs evaluation suites cross-platform without Unix-only pipe issues (`WinError 10038`).
+- **Interactive Visual Reporting (`scripts/generate_report.py`)**: Generates standalone HTML dashboards from `grading.json`.
+- **Dry-run Support**: Preview planned directory structures before writing (`--dry-run`).
 
 ### CLI Usage:
 ```bash
-python skills/create-skill/scripts/init_skill.py \
+python skills/create-skill-v2/scripts/init_skill.py \
   --name "pdf-parser" \
   --description "Extracts tabular data and text from PDF documents. Trigger when user uploads or mentions PDF analysis." \
   --dest "skills"
