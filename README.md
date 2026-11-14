@@ -16,6 +16,7 @@
 ### Key Highlights
 - **Zero-Bloat Progressive Disclosure**: Agents load skills in 3 stages (*Discovery* -> *Activation* -> *Execution*), preserving context tokens.
 - **The Portable Map (`SKILLS_MAP.md`)**: You do not need to clone the entire repository. Simply drop `SKILLS_MAP.md` into any project, and your AI Agent will automatically discover and pull skills from GitHub on demand.
+- **Multi-Ecosystem Categorization**: Skills are organized cleanly by source ecosystem (`anthropic/`, `openai/`) alongside a dedicated section for universal synthesized and custom skills (`general/`).
 - **Universal Compatibility**: Follows cross-client conventions (`.agents/skills/`) compatible across Windows, macOS, and Linux.
 
 ---
@@ -50,27 +51,31 @@
 
 ```text
 Skill-Repository/
+├── AGENTS.md                         # Agent instructions and system navigation guide
 ├── SKILLS_MAP.md                     # Portable dynamic router for AI agents
 ├── README.md                         # Repository documentation and guide
 ├── LICENSE                           # Open source MIT license
-└── skills/                           # Collection of Agent Skills
-    ├── create-skill/                 # Meta-skill to scaffold and test new skills (v1)
-    ├── create-skill-v2/              # Next-gen skill generator with dynamic templates & eval runner
-    ├── git-workflow/                 # Git operations and Conventional Commits helper
-    ├── email-teacher/                # Academic correspondence for students
-    ├── pdf/                          # PDF document reading, splitting, merging, and forms
-    ├── docx/                         # Word document creation, editing, and formatting
-    ├── xlsx/                         # Excel spreadsheet manipulation and data cleaning
-    ├── pptx/                         # PowerPoint slide deck generation and editing
-    ├── mcp-builder/                  # Model Context Protocol server development
-    ├── playwright/                   # Browser automation, navigation, and web scraping
-    ├── webapp-testing/               # Local web application testing and screenshot capture
-    ├── security-threat-model/        # Codebase-grounded AppSec threat modeling (STRIDE)
-    ├── security-best-practices/      # Language and framework security vulnerability review
-    ├── frontend-design/              # Distinctive UI/UX aesthetic, typography, and color guidance
-    ├── theme-factory/                # Preset styling themes for web, slides, and reports
-    ├── algorithmic-art/              # Interactive generative art using p5.js
-    └── canvas-design/                # Visual poster and document canvas design to PNG/PDF
+└── skills/
+    ├── general/                      # Custom, community, and universal skills
+    │   ├── create-skill/
+    │   ├── create-skill-v2/
+    │   ├── git-workflow/
+    │   └── email-teacher/
+    ├── anthropic/                    # Document processing, UI design, art & MCP
+    │   ├── pdf/
+    │   ├── docx/
+    │   ├── xlsx/
+    │   ├── pptx/
+    │   ├── mcp-builder/
+    │   ├── webapp-testing/
+    │   ├── frontend-design/
+    │   ├── theme-factory/
+    │   ├── algorithmic-art/
+    │   └── canvas-design/
+    └── openai/                       # Browser automation & application security
+        ├── playwright/
+        ├── security-threat-model/
+        └── security-best-practices/
 ```
 
 ---
@@ -92,36 +97,48 @@ cd Skill-Repository
 ```
 
 ### Method 3: Selective Skill Download (Sparse Checkout)
-If you only need a single skill (e.g., `create-skill`):
+If you only need a single skill (e.g., `create-skill-v2`):
 ```bash
 git clone --depth 1 --filter=blob:none --sparse https://github.com/xinbato/Skill-Repository.git my-skills
 cd my-skills
-git sparse-checkout set skills/create-skill
+git sparse-checkout set skills/general/create-skill-v2
 ```
 
 ---
 
 ## Available Skills
 
+### General & Synthesized (`skills/general/`)
+
 | Skill | Description | Category | Link |
 | :--- | :--- | :--- | :--- |
-| **[`create-skill-v2`](skills/create-skill-v2/)** | Next-gen skill generator with dynamic templates, Windows-safe eval runner (`run_eval.py`), and HTML reports. | Developer Tooling | [Explore](skills/create-skill-v2/SKILL.md) |
-| **[`create-skill`](skills/create-skill/)** | Generates standard-compliant Agent Skills with directory structures, metadata, scripts, evals, and references. | Developer Tooling | [Explore](skills/create-skill/SKILL.md) |
-| **[`git-workflow`](skills/git-workflow/)** | Analyzes git diffs, enforces Conventional Commits (`feat:`, `fix:`, etc.), prevents secret leaks, and prepares PRs. | Version Control / DevOps | [Explore](skills/git-workflow/SKILL.md) |
-| **[`email-teacher`](skills/email-teacher/)** | Drafts respectful, academic-grade correspondence to professors and teachers for leaves, extensions, and questions. | Academic / Communication | [Explore](skills/email-teacher/SKILL.md) |
-| **[`pdf`](skills/pdf/)** | Comprehensive PDF manipulation: extract text/tables, merge, split, rotate, watermark, OCR, and fill forms. | Document Processing | [Explore](skills/pdf/SKILL.md) |
-| **[`docx`](skills/docx/)** | Creates, reads, edits, and formats Word documents (.docx/.dotx) with tables of contents, styled tables, and images. | Document Processing | [Explore](skills/docx/SKILL.md) |
-| **[`xlsx`](skills/xlsx/)** | Reads, edits, recalculates formulas, cleans messy tabular data, and formats Excel spreadsheets (.xlsx/.csv). | Data & Spreadsheets | [Explore](skills/xlsx/SKILL.md) |
-| **[`pptx`](skills/pptx/)** | Generates, parses, edits slide decks, pitch decks, layouts, and speaker notes for PowerPoint (.pptx/.potx). | Presentation / Office | [Explore](skills/pptx/SKILL.md) |
-| **[`mcp-builder`](skills/mcp-builder/)** | Guides building high-quality Model Context Protocol (MCP) servers using FastMCP (Python) or TypeScript SDK. | AI Engineering / MCP | [Explore](skills/mcp-builder/SKILL.md) |
-| **[`playwright`](skills/playwright/)** | Automates real browsers from terminal: navigation, form filling, snapshots, screenshots, and scraping. | Testing & Automation | [Explore](skills/playwright/SKILL.md) |
-| **[`webapp-testing`](skills/webapp-testing/)** | Tests local web applications using Playwright, verifying frontend behavior and capturing debug screenshots. | Testing & Automation | [Explore](skills/webapp-testing/SKILL.md) |
-| **[`security-threat-model`](skills/security-threat-model/)** | Grounded AppSec threat modeling: enumerates trust boundaries, assets, attacker capabilities, and mitigations. | Security | [Explore](skills/security-threat-model/SKILL.md) |
-| **[`security-best-practices`](skills/security-best-practices/)** | Reviews code for language and framework security best practices (SQLi, XSS, tokens) with remediation diffs. | Security | [Explore](skills/security-best-practices/SKILL.md) |
-| **[`frontend-design`](skills/frontend-design/)** | Provides intentional aesthetic direction, typography scale, and cohesive palettes avoiding generic AI styles. | UI/UX & Design | [Explore](skills/frontend-design/SKILL.md) |
-| **[`theme-factory`](skills/theme-factory/)** | Styles artifacts, slides, reports, and HTML pages with 10 pre-set designer themes (colors and fonts). | UI/UX & Design | [Explore](skills/theme-factory/SKILL.md) |
-| **[`algorithmic-art`](skills/algorithmic-art/)** | Generates interactive algorithmic art using p5.js, flow fields, and seeded randomness. | Creative & Art | [Explore](skills/algorithmic-art/SKILL.md) |
-| **[`canvas-design`](skills/canvas-design/)** | Creates posters and visual documents exported to PNG/PDF adhering to strict grid and typography principles. | Creative & Art | [Explore](skills/canvas-design/SKILL.md) |
+| **[`create-skill-v2`](skills/general/create-skill-v2/)** | Next-gen skill generator with dynamic templates, Windows-safe eval runner (`run_eval.py`), and HTML reports. | Developer Tooling | [Explore](skills/general/create-skill-v2/SKILL.md) |
+| **[`create-skill`](skills/general/create-skill/)** | Generates standard-compliant Agent Skills with directory structures, metadata, scripts, evals, and references. | Developer Tooling | [Explore](skills/general/create-skill/SKILL.md) |
+| **[`git-workflow`](skills/general/git-workflow/)** | Analyzes git diffs, enforces Conventional Commits (`feat:`, `fix:`, etc.), prevents secret leaks, and prepares PRs. | Version Control / DevOps | [Explore](skills/general/git-workflow/SKILL.md) |
+| **[`email-teacher`](skills/general/email-teacher/)** | Drafts respectful, academic-grade correspondence to professors and teachers for leaves, extensions, and questions. | Academic / Communication | [Explore](skills/general/email-teacher/SKILL.md) |
+
+### Anthropic Ecosystem (`skills/anthropic/`)
+
+| Skill | Description | Category | Link |
+| :--- | :--- | :--- | :--- |
+| **[`pdf`](skills/anthropic/pdf/)** | Comprehensive PDF manipulation: extract text/tables, merge, split, rotate, watermark, OCR, and fill forms. | Document Processing | [Explore](skills/anthropic/pdf/SKILL.md) |
+| **[`docx`](skills/anthropic/docx/)** | Creates, reads, edits, and formats Word documents (.docx/.dotx) with tables of contents, styled tables, and images. | Document Processing | [Explore](skills/anthropic/docx/SKILL.md) |
+| **[`xlsx`](skills/anthropic/xlsx/)** | Reads, edits, recalculates formulas, cleans messy tabular data, and formats Excel spreadsheets (.xlsx/.csv). | Data & Spreadsheets | [Explore](skills/anthropic/xlsx/SKILL.md) |
+| **[`pptx`](skills/anthropic/pptx/)** | Generates, parses, edits slide decks, pitch decks, layouts, and speaker notes for PowerPoint (.pptx/.potx). | Presentation / Office | [Explore](skills/anthropic/pptx/SKILL.md) |
+| **[`mcp-builder`](skills/anthropic/mcp-builder/)** | Guides building high-quality Model Context Protocol (MCP) servers using FastMCP (Python) or TypeScript SDK. | AI Engineering / MCP | [Explore](skills/anthropic/mcp-builder/SKILL.md) |
+| **[`webapp-testing`](skills/anthropic/webapp-testing/)** | Tests local web applications using Playwright, verifying frontend behavior and capturing debug screenshots. | Testing & Automation | [Explore](skills/anthropic/webapp-testing/SKILL.md) |
+| **[`frontend-design`](skills/anthropic/frontend-design/)** | Provides intentional aesthetic direction, typography scale, and cohesive palettes avoiding generic AI styles. | UI/UX & Design | [Explore](skills/anthropic/frontend-design/SKILL.md) |
+| **[`theme-factory`](skills/anthropic/theme-factory/)** | Styles artifacts, slides, reports, and HTML pages with 10 pre-set designer themes (colors and fonts). | UI/UX & Design | [Explore](skills/anthropic/theme-factory/SKILL.md) |
+| **[`algorithmic-art`](skills/anthropic/algorithmic-art/)** | Generates interactive algorithmic art using p5.js, flow fields, and seeded randomness. | Creative & Art | [Explore](skills/anthropic/algorithmic-art/SKILL.md) |
+| **[`canvas-design`](skills/anthropic/canvas-design/)** | Creates posters and visual documents exported to PNG/PDF adhering to strict grid and typography principles. | Creative & Art | [Explore](skills/anthropic/canvas-design/SKILL.md) |
+
+### OpenAI Ecosystem (`skills/openai/`)
+
+| Skill | Description | Category | Link |
+| :--- | :--- | :--- | :--- |
+| **[`playwright`](skills/openai/playwright/)** | Automates real browsers from terminal: navigation, form filling, snapshots, screenshots, and scraping. | Testing & Automation | [Explore](skills/openai/playwright/SKILL.md) |
+| **[`security-threat-model`](skills/openai/security-threat-model/)** | Grounded AppSec threat modeling: enumerates trust boundaries, assets, attacker capabilities, and mitigations. | Security | [Explore](skills/openai/security-threat-model/SKILL.md) |
+| **[`security-best-practices`](skills/openai/security-best-practices/)** | Reviews code for language and framework security best practices (SQLi, XSS, tokens) with remediation diffs. | Security | [Explore](skills/openai/security-best-practices/SKILL.md) |
 
 ---
 
@@ -137,10 +154,10 @@ The flagship meta-skill in this repository is **`create-skill-v2`** — designed
 
 ### CLI Usage:
 ```bash
-python skills/create-skill-v2/scripts/init_skill.py \
+python skills/general/create-skill-v2/scripts/init_skill.py \
   --name "pdf-parser" \
   --description "Extracts tabular data and text from PDF documents. Trigger when user uploads or mentions PDF analysis." \
-  --dest "skills"
+  --dest "skills/general"
 ```
 
 ---
@@ -148,11 +165,14 @@ python skills/create-skill-v2/scripts/init_skill.py \
 ## Contributing New Skills
 
 1. Fork this repository: `https://github.com/xinbato/Skill-Repository`.
-2. Use `create-skill` to scaffold your new skill:
+2. Use `create-skill-v2` to scaffold your new skill into its target directory:
    ```bash
-   python skills/create-skill/scripts/init_skill.py --name "your-skill-name" --description "Clear trigger description" --dest "skills"
+   python skills/general/create-skill-v2/scripts/init_skill.py \
+     --name "your-skill-name" \
+     --description "Clear trigger description" \
+     --dest "skills/general"
    ```
-3. Implement instructions in `skills/<your-skill-name>/SKILL.md`.
+3. Implement instructions in `skills/<ecosystem>/<your-skill-name>/SKILL.md`.
 4. Add helper scripts into `scripts/`, reference guides into `references/`, and evaluation queries into `evals/`.
 5. Register your new skill in [`SKILLS_MAP.md`](SKILLS_MAP.md).
 6. Submit a Pull Request.
