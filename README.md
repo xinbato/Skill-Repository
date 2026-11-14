@@ -5,6 +5,7 @@
 
 [![Standard: agentskills.io](https://img.shields.io/badge/Standard-agentskills.io-blue.svg)](https://agentskills.io)
 [![Standard: agent-plugins.org](https://img.shields.io/badge/Plugin-agent--plugins.org-purple.svg)](https://agent-plugins.org)
+[![CI Validation](https://github.com/xinbato/Skill-Repository/actions/workflows/validate.yml/badge.svg)](https://github.com/xinbato/Skill-Repository/actions/workflows/validate.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 [![GitHub stars](https://img.shields.io/github/stars/xinbato/Skill-Repository?style=social)](https://github.com/xinbato/Skill-Repository)
 

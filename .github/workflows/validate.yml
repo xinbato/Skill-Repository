@@ -1,0 +1,42 @@
+name: CI Validation
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  validate:
+    name: Validate Skills & Manifests
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Run Python Skill Validator
+        run: python scripts/validate_skills.py
+
+      - name: Run Skill Anatomy & Persona Linter
+        run: node scripts/validate-skills.js
+
+      - name: Run Slash Command Parity Checker
+        run: node scripts/validate-commands.js
+
+      - name: Run Reference Link Integrity Checker
+        run: node scripts/validate-reference-links.js
+
+      - name: Run Manifest Version Sync Checker
+        run: node scripts/validate-versions.js

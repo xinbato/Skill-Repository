@@ -185,14 +185,31 @@ function rankSkills(prompt, corpus) {
 
 function loadSkills() {
   const skills = [];
-  for (const dir of fs.readdirSync(SKILLS_DIR)) {
-    const file = path.join(SKILLS_DIR, dir, 'SKILL.md');
-    if (!fs.existsSync(file)) continue;
-    const src = fs.readFileSync(file, 'utf8');
-    const frontmatter = parseFrontmatter(src);
-    if (!frontmatter) continue;
-    const { name, description } = frontmatter;
-    if (name && description) skills.push({ name: name.trim(), description: description.trim(), dir });
+  const topDirs = fs.readdirSync(SKILLS_DIR);
+  for (const dir of topDirs) {
+    const dirPath = path.join(SKILLS_DIR, dir);
+    if (!fs.statSync(dirPath).isDirectory()) continue;
+    const file = path.join(dirPath, 'SKILL.md');
+    if (fs.existsSync(file)) {
+      const src = fs.readFileSync(file, 'utf8');
+      const frontmatter = parseFrontmatter(src);
+      if (frontmatter && frontmatter.name && frontmatter.description) {
+        skills.push({ name: frontmatter.name.trim(), description: frontmatter.description.trim(), dir: dirPath });
+      }
+    } else {
+      for (const sub of fs.readdirSync(dirPath)) {
+        const subPath = path.join(dirPath, sub);
+        if (!fs.statSync(subPath).isDirectory()) continue;
+        const subFile = path.join(subPath, 'SKILL.md');
+        if (fs.existsSync(subFile)) {
+          const src = fs.readFileSync(subFile, 'utf8');
+          const frontmatter = parseFrontmatter(src);
+          if (frontmatter && frontmatter.name && frontmatter.description) {
+            skills.push({ name: frontmatter.name.trim(), description: frontmatter.description.trim(), dir: subPath });
+          }
+        }
+      }
+    }
   }
   return skills;
 }
