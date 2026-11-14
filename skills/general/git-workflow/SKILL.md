@@ -1,6 +1,6 @@
 ---
 name: git-workflow
-description: Streamlines Git operations: analyzes diff and status, generates Conventional Commit messages, crafts Pull Request descriptions, and guides safe branching. Use when the user asks to commit changes, write commit messages, review git diff, prepare PRs, or handle git workflow tasks.
+description: "Streamlines Git operations: analyzes diff and status, generates Conventional Commit messages, crafts Pull Request descriptions, and guides safe branching. Use when the user asks to commit changes, write commit messages, review git diff, prepare PRs, or handle git workflow tasks."
 license: MIT
 ---
 

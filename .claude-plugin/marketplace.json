@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-marketplace.json",
+  "name": "xinbato-skills",
+  "description": "Standardized, portable hub of production-ready AI Agent Skills covering engineering lifecycle, document processing, UI design, and security.",
+  "owner": {
+    "name": "Duong Dat",
+    "url": "https://github.com/xinbato"
+  },
+  "plugins": [
+    {
+      "name": "skill-repository",
+      "version": "1.2.0",
+      "source": {
+        "source": "github",
+        "repo": "xinbato/Skill-Repository"
+      },
+      "description": "Production-grade engineering skills covering requirements, planning, implementation, testing, review, office documents, and security.",
+      "homepage": "https://github.com/xinbato/Skill-Repository",
+      "license": "MIT",
+      "keywords": ["skills", "agents", "engineering", "spec", "tdd", "review", "anthropic", "openai"]
+    }
+  ]
+}

@@ -1,14 +1,14 @@
 # Central Agent Skills Map & Dynamic Router
 
 > **Repository**: [xinbato/Skill-Repository](https://github.com/xinbato/Skill-Repository)  
-> **Standard**: [agentskills.io](https://agentskills.io)  
+> **Standard**: [agentskills.io](https://agentskills.io) & [agent-plugins.org](https://agent-plugins.org)  
 > **Version**: 1.2.0
 
 ---
 
 ## Instructions for AI Agents (System Directive)
 
-You are an AI Agent reading this dynamic skills router. This file connects you to the centralized **Skill Repository** hosted at `https://github.com/xinbato/Skill-Repository`.
+You are an AI Agent reading this dynamic skills router. This repository provides a complete software engineering ecosystem: **Skills** (*How*), **Personas** (*Who*), **Commands** (*When*), and **Shared Checklists** (*References*).
 
 ### Operational Protocol
 Whenever the user asks you to perform a task:
@@ -22,20 +22,30 @@ Whenever the user asks you to perform a task:
 
 ## Skill Catalog
 
-### 1. General & Synthesized Skills (`skills/general/`)
+### 1. General & Engineering Lifecycle Skills (`skills/general/`)
 
-Curated universal and meta-skills applicable across all AI agent workflows.
+Universal skills covering the complete Software Development Lifecycle (SDLC) from intent discovery to shipping.
 
 | Skill Name | Description & Trigger Keywords | Category | Direct Raw URL |
 | :--- | :--- | :--- | :--- |
-| **`create-skill-v2`** | **Tạo và tối ưu hóa Agent Skill thế hệ mới (v2)**. Tự động nạp template động từ `assets/`, tích hợp runner đo kiểm eval đa nền tảng không lỗi trên Windows (`run_eval.py`), xuất báo cáo HTML (`generate_report.py`) và hỗ trợ xem trước `--dry-run`. | Developer Tooling | [Fetch Raw](https://raw.githubusercontent.com/xinbato/Skill-Repository/main/skills/general/create-skill-v2/SKILL.md) |
-| **`create-skill`** | **Tạo và chuẩn hóa Agent Skill mới (v1)**. Sử dụng khi người dùng yêu cầu: *"Tạo skill mới"*, *"Khởi tạo skill [tên]"*, *"Scaffold skill"*, *"Viết SKILL.md theo chuẩn"*. Tự động tạo cấu trúc thư mục, script CLI, tài liệu tham khảo, bộ kiểm thử evals và metadata hợp lệ. | Developer Tooling | [Fetch Raw](https://raw.githubusercontent.com/xinbato/Skill-Repository/main/skills/general/create-skill/SKILL.md) |
-| **`git-workflow`** | **Chuẩn hóa quy trình Git & Conventional Commits**. Sử dụng khi người dùng yêu cầu: *"Commit code"*, *"Tạo commit message"*, *"Chuẩn bị PR"*, *"Kiểm tra git diff"*, *"Tạo nhánh mới"*. Tự động phân tích git status/diff, chặn commit lộ secret, viết commit message chuẩn và sinh mẫu PR description. | Version Control / DevOps | [Fetch Raw](https://raw.githubusercontent.com/xinbato/Skill-Repository/main/skills/general/git-workflow/SKILL.md) |
-| **`email-teacher`** | **Soạn thư/email chuẩn mực gửi Thầy Cô/Giảng viên**. Kích hoạt khi: *"Xin nghỉ học"*, *"Xin hoãn/gia hạn deadline"*, *"Hỏi bài/thắc mắc môn học"*, *"Leave request"*, *"Deadline extension"*. Tự động nhận diện ý định ngay cả khi không có từ "email", tự động điều chỉnh ngôn ngữ đầu ra theo ngôn ngữ người dùng. | Academic / Communication | [Fetch Raw](https://raw.githubusercontent.com/xinbato/Skill-Repository/main/skills/general/email-teacher/SKILL.md) |
+| **`interview-me`** | **Phỏng vấn làm rõ mong muốn cốt lõi của người dùng**. Đặt từng câu hỏi kèm giả định (hypothesis) để tìm ra bản chất yêu cầu trước khi viết spec hoặc code. Kích hoạt khi: *"Interview me"*, *"Grill me"*, *"Làm rõ yêu cầu"*, *"Hỏi tôi trước khi làm"*. | Requirements & Discovery | [Fetch Raw](https://raw.githubusercontent.com/xinbato/Skill-Repository/main/skills/general/interview-me/SKILL.md) |
+| **`spec-driven-development`** | **Viết đặc tả yêu cầu (PRD/Spec) trước khi lập trình**. Đảm bảo mọi tính năng đều có mục tiêu, use cases, ranh giới và tiêu chí nghiệm thu rõ ràng. Kích hoạt khi: *"Tạo spec"*, *"Viết PRD"*, *"Đặc tả tính năng"*, *"Spec before code"*. | Requirements & PRD | [Fetch Raw](https://raw.githubusercontent.com/xinbato/Skill-Repository/main/skills/general/spec-driven-development/SKILL.md) |
+| **`planning-and-task-breakdown`** | **Phân rã đặc tả thành các công việc nguyên tử (atomic tasks)**. Sắp xếp thứ tự thực thi hợp lý, tối ưu cho context window của Agent. Kích hoạt khi: *"Lập kế hoạch"*, *"Chia nhỏ task"*, *"Task breakdown"*, *"Plan implementation"*. | Planning & Tasks | [Fetch Raw](https://raw.githubusercontent.com/xinbato/Skill-Repository/main/skills/general/planning-and-task-breakdown/SKILL.md) |
+| **`incremental-implementation`** | **Triển khai tính năng theo từng lát cắt mỏng (thin vertical slices)**. Code và kiểm chứng từng phần nhỏ, commit liên tục, không bao giờ code dồn đống lớn. Kích hoạt khi: *"Incremental build"*, *"Code từng bước"*, *"Thin slice"*. | Implementation | [Fetch Raw](https://raw.githubusercontent.com/xinbato/Skill-Repository/main/skills/general/incremental-implementation/SKILL.md) |
+| **`test-driven-development`** | **Phát triển hướng kiểm thử (TDD) theo chu trình Red-Green-Refactor**. Viết test chứng minh lỗi trước khi viết code xử lý. Kích hoạt khi: *"TDD"*, *"Viết test trước"*, *"Red-green-refactor"*, *"Test-driven"*. | Testing & Quality | [Fetch Raw](https://raw.githubusercontent.com/xinbato/Skill-Repository/main/skills/general/test-driven-development/SKILL.md) |
+| **`debugging-and-error-recovery`** | **Quy trình gỡ lỗi có hệ thống tìm nguyên nhân gốc rễ (Root Cause)**. Tái hiện lỗi -> Cô lập phạm vi -> Sửa chữa có kiểm chứng, chấm dứt sửa mò. Kích hoạt khi: *"Debug lỗi"*, *"Fix bug"*, *"Root cause analysis"*, *"Bị crash"*. | Debugging & Diagnostics | [Fetch Raw](https://raw.githubusercontent.com/xinbato/Skill-Repository/main/skills/general/debugging-and-error-recovery/SKILL.md) |
+| **`code-review-and-quality`** | **Rà soát mã nguồn toàn diện theo 5 trục chất lượng**. Đánh giá Tính đúng đắn, Khả năng đọc, Kiến trúc, Bảo mật, Hiệu năng theo các cấp độ Critical/Required/Optional/Nit. Kích hoạt khi: *"Review code"*, *"Đánh giá PR"*, *"Code health check"*. | Code Review & QA | [Fetch Raw](https://raw.githubusercontent.com/xinbato/Skill-Repository/main/skills/general/code-review-and-quality/SKILL.md) |
+| **`code-simplification`** | **Tối giản hóa và làm trong sáng mã nguồn**. Loại bỏ over-engineering, làm phẳng logic lồng nhau mà không thay đổi hành vi code. Kích hoạt khi: *"Simplify code"*, *"Tối giản code"*, *"Refactor cho gọn"*, *"Clarity over cleverness"*. | Refactoring | [Fetch Raw](https://raw.githubusercontent.com/xinbato/Skill-Repository/main/skills/general/code-simplification/SKILL.md) |
+| **`source-driven-development`** | **Căn cứ mọi quyết định kỹ thuật trên tài liệu và mã nguồn chính thức**. Đọc code framework và docs chuẩn để chống ảo giác (hallucination). Kích hoạt khi: *"Kiểm tra tài liệu chính thức"*, *"Ground in source"*, *"Verify against framework docs"*. | Architecture & Grounding | [Fetch Raw](https://raw.githubusercontent.com/xinbato/Skill-Repository/main/skills/general/source-driven-development/SKILL.md) |
+| **`shipping-and-launch`** | **Chuẩn bị phát hành phần mềm lên môi trường production**. Checklist nghiệm thu kỹ thuật, kế hoạch di chuyển dữ liệu (migration) và rollback an toàn. Kích hoạt khi: *"Chuẩn bị ship"*, *"Release to production"*, *"Pre-launch checklist"*. | Release & Operations | [Fetch Raw](https://raw.githubusercontent.com/xinbato/Skill-Repository/main/skills/general/shipping-and-launch/SKILL.md) |
+| **`create-skill-v2`** | **Tạo và tối ưu hóa Agent Skill thế hệ mới (v2)**. Nạp template động từ `assets/`, tích hợp runner đo kiểm eval đa nền tảng không lỗi trên Windows (`run_eval.py`), xuất báo cáo HTML (`generate_report.py`). | Developer Tooling | [Fetch Raw](https://raw.githubusercontent.com/xinbato/Skill-Repository/main/skills/general/create-skill-v2/SKILL.md) |
+| **`create-skill`** | **Tạo và chuẩn hóa Agent Skill mới (v1)**. Khởi tạo cấu trúc thư mục, script CLI, tài liệu tham khảo và metadata hợp lệ theo chuẩn agentskills.io. | Developer Tooling | [Fetch Raw](https://raw.githubusercontent.com/xinbato/Skill-Repository/main/skills/general/create-skill/SKILL.md) |
+| **`git-workflow`** | **Chuẩn hóa quy trình Git & Conventional Commits**. Phân tích git status/diff, chặn commit lộ secret, viết commit message chuẩn và sinh mẫu PR description. | Version Control / DevOps | [Fetch Raw](https://raw.githubusercontent.com/xinbato/Skill-Repository/main/skills/general/git-workflow/SKILL.md) |
+| **`email-teacher`** | **Soạn thư/email chuẩn mực gửi Thầy Cô/Giảng viên**. Kích hoạt khi: Xin nghỉ học, xin gia hạn deadline, hỏi bài tập, thắc mắc môn học. Tự động thích ứng ngôn ngữ. | Academic / Communication | [Fetch Raw](https://raw.githubusercontent.com/xinbato/Skill-Repository/main/skills/general/email-teacher/SKILL.md) |
 
 ### 2. Anthropic Ecosystem Skills (`skills/anthropic/`)
 
-Document processing, UI design, generative art, and protocol servers from Anthropic.
+Document processing, UI design, generative art, and protocol servers originating from Anthropic.
 
 | Skill Name | Description & Trigger Keywords | Category | Direct Raw URL |
 | :--- | :--- | :--- | :--- |
@@ -62,39 +72,56 @@ Browser automation and application security skills from OpenAI.
 
 ---
 
+## Shared Engineering References (`references/`)
+
+Repo-wide authoritative checklists and standards located at `references/`:
+- [`definition-of-done.md`](references/definition-of-done.md): The project-wide Definition of Done that every task clears.
+- [`orchestration-patterns.md`](references/orchestration-patterns.md): Endorsed multi-agent orchestration patterns (Parallel Fan-out with Merge).
+- [`security-checklist.md`](references/security-checklist.md): Core application security review checklist.
+- [`performance-checklist.md`](references/performance-checklist.md): Frontend, backend, and database performance checklist.
+- [`testing-patterns.md`](references/testing-patterns.md): Concrete testing patterns (Jest, RTL, Supertest, Playwright).
+- [`accessibility-checklist.md`](references/accessibility-checklist.md): Web accessibility and WCAG compliance checks.
+
+---
+
+## Expert Personas (`agents/`)
+
+Specialized expert roles designed for parallel subagent invocation:
+- **`code-reviewer`** ([`agents/code-reviewer.md`](agents/code-reviewer.md)): Senior Staff Engineer evaluating correctness, readability, architecture, security, and performance.
+- **`security-auditor`** ([`agents/security-auditor.md`](agents/security-auditor.md)): Security specialist auditing input validation, auth, secrets, and trust boundaries.
+- **`test-engineer`** ([`agents/test-engineer.md`](agents/test-engineer.md)): QA engineer evaluating test coverage, boundary conditions, and test reliability.
+- **`web-performance-auditor`** ([`agents/web-performance-auditor.md`](agents/web-performance-auditor.md)): Web performance auditor focusing on Core Web Vitals and resource budgets.
+
+---
+
+## Slash Commands (`commands/`)
+
+Pre-packaged lifecycle commands that activate skills automatically:
+- `/spec`: Defines requirements and generates PRD (`commands/spec.toml`).
+- `/plan`: Breaks requirements into ordered tasks (`commands/planning.toml`).
+- `/build`: Incrementally implements tasks one slice at a time (`commands/build.toml`).
+- `/test`: Verifies behavior using test-driven development (`commands/test.toml`).
+- `/review`: Executes a five-axis code review before merge (`commands/review.toml`).
+- `/code-simplify`: Refactors code for maximum clarity (`commands/code-simplify.toml`).
+- `/ship`: Merges reports from multiple personas and prepares production release (`commands/ship.toml`).
+
+---
+
 ## Dynamic Fetch Commands
 
 When you need to pull a skill into the current workspace, run any of the following commands:
 
 ### Option 1: Universal Python One-Liner (Cross-Platform)
 ```bash
-python -c "import urllib.request, os; group='general'; name='create-skill-v2'; os.makedirs(f'.agents/skills/{name}', exist_ok=True); urllib.request.urlretrieve(f'https://raw.githubusercontent.com/xinbato/Skill-Repository/main/skills/{group}/{name}/SKILL.md', f'.agents/skills/{name}/SKILL.md'); print(f'Installed {name}')"
+python -c "import urllib.request, os; group='general'; name='interview-me'; os.makedirs(f'.agents/skills/{name}', exist_ok=True); urllib.request.urlretrieve(f'https://raw.githubusercontent.com/xinbato/Skill-Repository/main/skills/{group}/{name}/SKILL.md', f'.agents/skills/{name}/SKILL.md'); print(f'Installed {name}')"
 ```
 
 ### Option 2: PowerShell (Windows Native)
 ```powershell
-$group = "general"; $name = "create-skill-v2"; New-Item -ItemType Directory -Force -Path ".agents/skills/$name" | Out-Null; Invoke-WebRequest -Uri "https://raw.githubusercontent.com/xinbato/Skill-Repository/main/skills/$group/$name/SKILL.md" -OutFile ".agents/skills/$name/SKILL.md"; Write-Host "Installed $name"
+$group = "general"; $name = "interview-me"; New-Item -ItemType Directory -Force -Path ".agents/skills/$name" | Out-Null; Invoke-WebRequest -Uri "https://raw.githubusercontent.com/xinbato/Skill-Repository/main/skills/$group/$name/SKILL.md" -OutFile ".agents/skills/$name/SKILL.md"; Write-Host "Installed $name"
 ```
 
 ### Option 3: Bash / cURL (macOS / Linux)
 ```bash
-GROUP="general" && NAME="create-skill-v2" && mkdir -p ".agents/skills/$NAME" && curl -sSL "https://raw.githubusercontent.com/xinbato/Skill-Repository/main/skills/$GROUP/$NAME/SKILL.md" -o ".agents/skills/$NAME/SKILL.md" && echo "Installed $NAME"
+GROUP="general" && NAME="interview-me" && mkdir -p ".agents/skills/$NAME" && curl -sSL "https://raw.githubusercontent.com/xinbato/Skill-Repository/main/skills/$GROUP/$NAME/SKILL.md" -o ".agents/skills/$NAME/SKILL.md" && echo "Installed $NAME"
 ```
-
-### Option 4: Full Skill Clone via Git Sparse-Checkout
-If the skill requires its `scripts/`, `references/`, and `assets/` subdirectories:
-```bash
-git clone --depth 1 --filter=blob:none --sparse https://github.com/xinbato/Skill-Repository.git .temp-skills
-cd .temp-skills && git sparse-checkout set skills/general/create-skill-v2
-# Move to .agents/skills/create-skill-v2
-```
-
----
-
-## Updating this Map
-When adding a new skill to `https://github.com/xinbato/Skill-Repository`:
-1. Place the skill inside its respective ecosystem directory:
-   - `skills/anthropic/<skill-name>/` for Anthropic skills.
-   - `skills/openai/<skill-name>/` for OpenAI skills.
-   - `skills/general/<skill-name>/` for general/custom/community skills.
-2. Add a new row to the corresponding table in this file with its name, triggers, category, and Raw URL link.

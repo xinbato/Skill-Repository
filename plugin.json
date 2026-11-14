@@ -1,0 +1,10 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "skill-repository",
+  "version": "1.2.0",
+  "description": "Standardized, portable hub of production-ready AI Agent Skills covering engineering lifecycle, document processing, UI design, and security.",
+  "author": { "name": "Duong Dat", "url": "https://github.com/xinbato" },
+  "repository": "https://github.com/xinbato/Skill-Repository",
+  "license": "MIT",
+  "keywords": ["skills", "agentskills", "engineering", "spec", "tdd", "review", "anthropic", "openai"]
+}

@@ -1,0 +1,29 @@
+{
+  "name": "skill-repository",
+  "version": "1.2.0",
+  "description": "Standardized, portable hub of production-ready AI Agent Skills covering engineering lifecycle, document processing, UI design, and security.",
+  "author": {
+    "name": "Duong Dat",
+    "url": "https://github.com/xinbato"
+  },
+  "homepage": "https://github.com/xinbato/Skill-Repository",
+  "repository": "https://github.com/xinbato/Skill-Repository",
+  "license": "MIT",
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Skill Repository",
+    "shortDescription": "Production-grade skills covering engineering workflows, office documents, UI design, and security.",
+    "longDescription": "Skill-Repository bundles multi-agent production workflows covering requirements, planning, implementation, testing, review, office documents, and security.",
+    "developerName": "Duong Dat",
+    "category": "Productivity",
+    "capabilities": [
+      "Interactive",
+      "Read",
+      "Write"
+    ],
+    "defaultPrompt": [
+      "Consult SKILLS_MAP.md to choose the right skill for this task",
+      "Follow the standard agentskills.io workflow to solve my request"
+    ]
+  }
+}

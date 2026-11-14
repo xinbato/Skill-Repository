@@ -1,0 +1,22 @@
+{
+  "name": "skill-repository",
+  "interface": {
+    "displayName": "Skill Repository"
+  },
+  "plugins": [
+    {
+      "name": "skill-repository",
+      "version": "1.2.0",
+      "description": "Production-grade skills covering engineering workflows, office documents, UI design, and security.",
+      "source": {
+        "source": "local",
+        "path": "./"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Productivity"
+    }
+  ]
+}
