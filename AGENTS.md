@@ -29,6 +29,7 @@ skills/
 │   ├── shipping-and-launch/
 │   ├── create-skill/
 │   ├── create-skill-v2/
+│   ├── find-skills/
 │   ├── git-workflow/
 │   └── email-teacher/
 ├── anthropic/        # Document processing, UI design, art & MCP from Anthropic
@@ -65,6 +66,7 @@ skills/
   - Code refactoring & simplification -> `skills/general/code-simplification`
   - Verify against official docs & source -> `skills/general/source-driven-development`
   - Production release readiness & checklist -> `skills/general/shipping-and-launch`
+  - Discover & install open ecosystem skills -> `skills/general/find-skills`
   - Scaffold / generate a new skill -> `skills/general/create-skill-v2`
   - Git commits / Conventional Commits / PR -> `skills/general/git-workflow`
   - Academic & professional correspondence -> `skills/general/email-teacher`

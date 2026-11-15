@@ -97,6 +97,7 @@ Skill-Repository/
     ├── general/                      # SDLC discipline, meta-skills & custom tooling
     │   ├── create-skill/
     │   ├── create-skill-v2/
+    │   ├── find-skills/
     │   ├── git-workflow/
     │   ├── email-teacher/
     │   ├── interview-me/
@@ -160,6 +161,7 @@ Pre-configured slash commands for the development lifecycle:
 | **[`code-simplification`](skills/general/code-simplification/)** | Simplifies code for maximum clarity and reduces complexity without breaking behavior. | Refactoring | [Explore](skills/general/code-simplification/SKILL.md) |
 | **[`source-driven-development`](skills/general/source-driven-development/)** | Grounds implementation decisions in official framework documentation and source code. | Architecture & Grounding | [Explore](skills/general/source-driven-development/SKILL.md) |
 | **[`shipping-and-launch`](skills/general/shipping-and-launch/)** | Prepares production releases with deployment checklists, migration plans, and rollback gates. | Release & Operations | [Explore](skills/general/shipping-and-launch/SKILL.md) |
+| **[`find-skills`](skills/general/find-skills/)** | Discovers and installs skills from the open ecosystem using `npx skills` when capabilities are needed. | Developer Tooling / Discovery | [Explore](skills/general/find-skills/SKILL.md) |
 | **[`create-skill-v2`](skills/general/create-skill-v2/)** | Next-gen skill generator with dynamic templates, Windows-safe eval runner, and HTML reports. | Developer Tooling | [Explore](skills/general/create-skill-v2/SKILL.md) |
 | **[`create-skill`](skills/general/create-skill/)** | Scaffolds standard-compliant Agent Skills with directory structure, metadata, and scripts. | Developer Tooling | [Explore](skills/general/create-skill/SKILL.md) |
 | **[`git-workflow`](skills/general/git-workflow/)** | Analyzes git diffs, enforces Conventional Commits, prevents secret leaks, and prepares PRs. | Version Control / DevOps | [Explore](skills/general/git-workflow/SKILL.md) |

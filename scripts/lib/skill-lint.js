@@ -101,6 +101,7 @@ const SECTION_EXEMPT_SKILLS = {
   'security-best-practices': 'OpenAI official skill',
   'create-skill': 'Scaffolding meta-skill',
   'create-skill-v2': 'Scaffolding meta-skill',
+  'find-skills': 'Meta-skill — discovers and installs skills from open ecosystem',
   'git-workflow': 'Git helper skill',
   'email-teacher': 'Academic correspondence skill',
 };

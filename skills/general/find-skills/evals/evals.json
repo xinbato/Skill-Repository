@@ -1,0 +1,42 @@
+{
+  "skill_name": "find-skills",
+  "trigger": {
+    "positive": [
+      {
+        "prompt": "Find a skill for Docker deployment and containerization",
+        "top_k": 3
+      },
+      {
+        "prompt": "Is there an agent skill that can help with Tailwind CSS styling?",
+        "top_k": 3
+      },
+      {
+        "prompt": "Search for skills to automate React testing",
+        "top_k": 3
+      }
+    ],
+    "negative": [
+      {
+        "prompt": "Review my pull request against security standards",
+        "owner": "code-review-and-quality"
+      },
+      {
+        "prompt": "Deploy the current build to staging",
+        "owner": "shipping-and-launch"
+      }
+    ]
+  },
+  "evals": [
+    {
+      "id": 1,
+      "kind": "dialogue",
+      "prompt": "How do I optimize React performance? Is there an agent skill for that?",
+      "expected_output": "Searches for or recommends verified skills with install commands and links",
+      "expectations": [
+        "Identifies relevant skills from trusted sources like vercel-labs or anthropics",
+        "Provides clear install commands using npx skills add",
+        "Does not recommend unverified skills with low install counts"
+      ]
+    }
+  ]
+}
