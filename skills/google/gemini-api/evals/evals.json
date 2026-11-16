@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "description": "Evaluation test cases for gemini-api",
+  "evals": [
+    {
+      "id": "eval-smoke-test-1",
+      "prompt": "Activate and test basic usage of gemini-api",
+      "expected_outcome": "Skill executes instructions without error",
+      "assertions": [
+        {
+          "type": "contains_keywords",
+          "keywords": [
+            "gemini-api"
+          ]
+        }
+      ]
+    }
+  ]
+}

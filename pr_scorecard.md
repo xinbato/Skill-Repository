@@ -1,17 +1,17 @@
-## 🤖 Báo cáo Tự động Đồng bộ Skill: `brand-guidelines`
+## 🤖 Báo cáo Tự động Đồng bộ Skill: `gemini-api`
 
 | Thông tin | Chi tiết |
 | :--- | :--- |
-| **Skill** | `brand-guidelines` |
-| **Danh mục** | `skills/anthropic/` |
-| **Nguồn gốc** | `anthropics/skills/skills/brand-guidelines` |
+| **Skill** | `gemini-api` |
+| **Danh mục** | `skills/google/` |
+| **Nguồn gốc** | `google/skills/skills/cloud/gemini-api` |
 | **Trạng thái Gate** | **✅ SẴN SÀNG DUYỆT** |
 
 ---
 
 ### 1. Kết quả Kiểm tra Trùng lặp (Deduplication Gate)
-### ✅ Độc nhất / Tính năng mới (21% match)
-- **Skill ứng viên**: `brand-guidelines`
+### ✅ Độc nhất / Tính năng mới (10% match)
+- **Skill ứng viên**: `gemini-api`
 - **Khuyến nghị**: Skill mới mang lại năng lực độc lập, không bị trùng lặp. Đủ điều kiện khởi tạo PR.
 
 ---
