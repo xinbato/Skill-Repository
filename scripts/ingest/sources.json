@@ -21,6 +21,16 @@
       "target_category": "general",
       "allowed_licenses": ["MIT", "Apache-2.0"],
       "enabled": true
+    },
+    {
+      "id": "garden-skills",
+      "name": "Garden Skills (ConardLi)",
+      "repo": "ConardLi/garden-skills",
+      "branch": "main",
+      "path": "skills",
+      "target_category": "general",
+      "allowed_licenses": ["MIT", "Apache-2.0"],
+      "enabled": true
     }
   ]
 }
