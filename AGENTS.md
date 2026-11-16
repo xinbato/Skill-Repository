@@ -12,42 +12,17 @@ This file provides system guidance to AI coding agents (Antigravity, Claude Code
 
 ### Directory Organization
 
-Skills are organized into three primary ecosystem categories:
+Skills are organized into four primary ecosystem categories:
 
 ```text
 skills/
 ├── general/          # Universal engineering lifecycle, meta-skills & custom tooling
-│   ├── interview-me/
-│   ├── spec-driven-development/
-│   ├── planning-and-task-breakdown/
-│   ├── incremental-implementation/
-│   ├── test-driven-development/
-│   ├── debugging-and-error-recovery/
-│   ├── code-review-and-quality/
-│   ├── code-simplification/
-│   ├── source-driven-development/
-│   ├── shipping-and-launch/
-│   ├── create-skill/
-│   ├── create-skill-v2/
-│   ├── find-skills/
-│   ├── git-workflow/
-│   └── email-teacher/
 ├── anthropic/        # Document processing, UI design, art & MCP from Anthropic
-│   ├── pdf/
-│   ├── docx/
-│   ├── xlsx/
-│   ├── pptx/
-│   ├── mcp-builder/
-│   ├── webapp-testing/
-│   ├── frontend-design/
-│   ├── theme-factory/
-│   ├── algorithmic-art/
-│   └── canvas-design/
-└── openai/           # Browser automation & application security from OpenAI
-    ├── playwright/
-    ├── security-threat-model/
-    └── security-best-practices/
+├── openai/           # Browser automation & application security from OpenAI
+└── google/           # Cloud infrastructure, Gemini API, BigQuery & developer tools from Google
 ```
+
+> **Note**: For the complete, dynamically updated catalog of all individual skills and fetch URLs, consult [`SKILLS_MAP.md`](SKILLS_MAP.md).
 
 ---
 

@@ -59,7 +59,7 @@ function main() {
   let totalWarnings = 0;
 
   for (const entry of skillEntries) {
-    const isCategoryExempt = entry.category === 'anthropic' || entry.category === 'openai';
+    const isCategoryExempt = entry.category === 'anthropic' || entry.category === 'openai' || entry.category === 'google';
     const { errors, warnings, exempt } = lintSkill(entry.dirName, entry.baseDir, knownSkills, isCategoryExempt);
     totalErrors   += errors.length;
     totalWarnings += warnings.length;

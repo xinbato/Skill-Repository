@@ -71,6 +71,13 @@ Browser automation and application security skills from OpenAI.
 | **`security-threat-model`** | **Mô hình hóa mối đe dọa bảo mật theo mã nguồn**. Nhận diện ranh giới tin cậy (trust boundaries), tài sản dữ liệu, kịch bản tấn công và đề xuất giải pháp phòng ngừa theo chuẩn AppSec. | Security | [Fetch Raw](https://raw.githubusercontent.com/xinbato/Skill-Repository/main/skills/openai/security-threat-model/SKILL.md) |
 | **`security-best-practices`** | **Rà soát mã nguồn theo tiêu chuẩn bảo mật chuyên sâu**. Đánh giá bảo mật cho Python, JS/TS, Go; phát hiện lỗ hổng SQLi, XSS, token handling và đề xuất code sửa chuẩn. | Security | [Fetch Raw](https://raw.githubusercontent.com/xinbato/Skill-Repository/main/skills/openai/security-best-practices/SKILL.md) |
 
+### 4. Google Ecosystem Skills (`skills/google/`)
+
+Official enterprise cloud infrastructure, Gemini API, BigQuery, and developer platform skills from Google.
+
+| Skill Name | Description & Trigger Keywords | Category | Direct Raw URL |
+| :--- | :--- | :--- | :--- |
+
 ---
 
 ## Shared Engineering References (`references/`)

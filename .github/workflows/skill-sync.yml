@@ -22,6 +22,7 @@ on:
           - general
           - anthropic
           - openai
+          - google
         default: 'anthropic'
       dry_run:
         description: 'Dry run check without writing changes'

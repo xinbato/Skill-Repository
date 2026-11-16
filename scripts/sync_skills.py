@@ -204,6 +204,7 @@ def update_docs_catalog(skill_name: str, desc: str, category: str):
                 "general": "### 1. General & Engineering Lifecycle Skills",
                 "anthropic": "### 2. Anthropic Ecosystem Skills",
                 "openai": "### 3. OpenAI Ecosystem Skills",
+                "google": "### 4. Google Ecosystem Skills",
             }
             header = section_headers.get(category)
             if header and header in content:
@@ -224,7 +225,11 @@ def update_docs_catalog(skill_name: str, desc: str, category: str):
                     if len(clean_desc) > 220:
                         clean_desc = clean_desc[:217] + "..."
                     raw_url = f"https://raw.githubusercontent.com/xinbato/Skill-Repository/main/skills/{category}/{skill_name}/SKILL.md"
-                    label = "Anthropic Ecosystem" if category == "anthropic" else ("OpenAI Ecosystem" if category == "openai" else "General")
+                    label = (
+                        "Google Ecosystem" if category == "google" else
+                        "Anthropic Ecosystem" if category == "anthropic" else
+                        "OpenAI Ecosystem" if category == "openai" else "General"
+                    )
                     new_row = f"| **`{skill_name}`** | **{skill_name}**: {clean_desc} | {label} | [Fetch Raw]({raw_url}) |"
                     lines.insert(last_table_idx + 1, new_row)
                     new_sec_body = "\n".join(lines)
@@ -244,6 +249,7 @@ def update_docs_catalog(skill_name: str, desc: str, category: str):
                 "general": "### General & Engineering Lifecycle",
                 "anthropic": "### Anthropic Ecosystem",
                 "openai": "### OpenAI Ecosystem",
+                "google": "### Google Ecosystem",
             }
             header = section_headers.get(category)
             if header and header in content:
@@ -263,7 +269,11 @@ def update_docs_catalog(skill_name: str, desc: str, category: str):
                     clean_desc = desc.replace("\n", " ").strip()
                     if len(clean_desc) > 150:
                         clean_desc = clean_desc[:147] + "..."
-                    label = "Anthropic Ecosystem" if category == "anthropic" else ("OpenAI Ecosystem" if category == "openai" else "General")
+                    label = (
+                        "Google Ecosystem" if category == "google" else
+                        "Anthropic Ecosystem" if category == "anthropic" else
+                        "OpenAI Ecosystem" if category == "openai" else "General"
+                    )
                     new_row = f"| **[`{skill_name}`](skills/{category}/{skill_name}/)** | {clean_desc} | {label} | [Explore](skills/{category}/{skill_name}/SKILL.md) |"
                     lines.insert(last_table_idx + 1, new_row)
                     new_sec_body = "\n".join(lines)
@@ -497,7 +507,7 @@ def main():
     parser = argparse.ArgumentParser(description="Skill Ingestion Pipeline CLI")
     parser.add_argument("--sources-file", default=str(SCRIPTS_DIR / "ingest" / "sources.json"), help="Path to sources.json")
     parser.add_argument("--check-local", type=str, help="Check and scan a local directory")
-    parser.add_argument("--category", default="general", choices=["general", "anthropic", "openai"], help="Target category")
+    parser.add_argument("--category", default="general", choices=["general", "anthropic", "openai", "google"], help="Target category")
     parser.add_argument("--dry-run", action="store_true", help="Perform checks without copying files")
     parser.add_argument("--output-pr-data", type=str, help="Path to write PR scorecard markdown / json")
     parser.add_argument("--github-repo", type=str, help="Ingest directly from GitHub repo (e.g. owner/repo)")

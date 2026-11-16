@@ -94,38 +94,11 @@ Skill-Repository/
 │   ├── validate-skills.js
 │   ├── validate-commands.js
 │   └── validate-reference-links.js
-└── skills/
-    ├── general/                      # SDLC discipline, meta-skills & custom tooling
-    │   ├── create-skill/
-    │   ├── create-skill-v2/
-    │   ├── find-skills/
-    │   ├── git-workflow/
-    │   ├── email-teacher/
-    │   ├── interview-me/
-    │   ├── spec-driven-development/
-    │   ├── planning-and-task-breakdown/
-    │   ├── incremental-implementation/
-    │   ├── test-driven-development/
-    │   ├── debugging-and-error-recovery/
-    │   ├── code-review-and-quality/
-    │   ├── code-simplification/
-    │   ├── source-driven-development/
-    │   └── shipping-and-launch/
-    ├── anthropic/                    # Document processing, UI design, art & MCP
-    │   ├── pdf/
-    │   ├── docx/
-    │   ├── xlsx/
-    │   ├── pptx/
-    │   ├── mcp-builder/
-    │   ├── webapp-testing/
-    │   ├── frontend-design/
-    │   ├── theme-factory/
-    │   ├── algorithmic-art/
-    │   └── canvas-design/
-    └── openai/                       # Browser automation & application security
-        ├── playwright/
-        ├── security-threat-model/
-        └── security-best-practices/
+└── skills/                           # Modular engineering capabilities by ecosystem (How)
+    ├── general/                      # Universal engineering lifecycle (SDLC) & custom tooling
+    ├── anthropic/                    # Document processing, UI design, generative art & MCP
+    ├── openai/                       # Browser automation & application security
+    └── google/                       # Cloud infrastructure, Gemini API & developer tools
 ```
 
 ---
@@ -190,6 +163,11 @@ Pre-configured slash commands for the development lifecycle:
 | **[`playwright`](skills/openai/playwright/)** | Automates real browsers from terminal: navigation, form filling, snapshots, screenshots, and scraping. | Testing & Automation | [Explore](skills/openai/playwright/SKILL.md) |
 | **[`security-threat-model`](skills/openai/security-threat-model/)** | Grounded AppSec threat modeling: enumerates trust boundaries, assets, attacker capabilities, mitigations. | Security | [Explore](skills/openai/security-threat-model/SKILL.md) |
 | **[`security-best-practices`](skills/openai/security-best-practices/)** | Reviews code for language and framework security best practices (SQLi, XSS, tokens) with fix diffs. | Security | [Explore](skills/openai/security-best-practices/SKILL.md) |
+
+### Google Ecosystem (`skills/google/`)
+
+| Skill | Description | Category | Link |
+| :--- | :--- | :--- | :--- |
 
 ---
 

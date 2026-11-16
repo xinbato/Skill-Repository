@@ -639,7 +639,7 @@ function lintSkill(dirName, skillsDir, knownSkills, isCategoryExempt = false) {
   }
 
   const category = path.basename(skillsDir);
-  const exemptCategory = isCategoryExempt || category === 'anthropic' || category === 'openai';
+  const exemptCategory = isCategoryExempt || category === 'anthropic' || category === 'openai' || category === 'google';
   const result = lintSkillContent(dirName, content, knownSkills, exemptCategory);
   result.errors.push(...lintSkillLayout(skillDir));
   return result;

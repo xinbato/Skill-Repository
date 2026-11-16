@@ -31,6 +31,26 @@
       "target_category": "general",
       "allowed_licenses": ["MIT", "Apache-2.0"],
       "enabled": true
+    },
+    {
+      "id": "google-cloud-skills",
+      "name": "Google Cloud & Enterprise Skills",
+      "repo": "google/skills",
+      "branch": "main",
+      "path": "skills/cloud",
+      "target_category": "google",
+      "allowed_licenses": ["Apache-2.0", "MIT"],
+      "enabled": true
+    },
+    {
+      "id": "google-developer-skills",
+      "name": "Google Developer Platform Skills",
+      "repo": "google/skills",
+      "branch": "main",
+      "path": "skills/developers",
+      "target_category": "google",
+      "allowed_licenses": ["Apache-2.0", "MIT"],
+      "enabled": true
     }
   ]
 }
