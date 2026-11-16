@@ -176,10 +176,103 @@ def run_local_validation() -> bool:
         if py_res.returncode != 0:
             print(f"[FAIL] validate_skills.py failed:\n{py_res.stdout}\n{py_res.stderr}")
             return False
+
+        node_res = subprocess.run(
+            ["node", str(SCRIPTS_DIR / "validate-skills.js")],
+            cwd=str(REPO_ROOT),
+            capture_output=True,
+            text=True
+        )
+        if node_res.returncode != 0:
+            print(f"[FAIL] validate-skills.js failed:\n{node_res.stdout}\n{node_res.stderr}")
+            return False
+
         return True
     except Exception as e:
         print(f"[WARN] Error running validation script: {e}")
         return False
+
+
+def update_docs_catalog(skill_name: str, desc: str, category: str):
+    """Register ingested skill into SKILLS_MAP.md and README.md."""
+    # 1. Update SKILLS_MAP.md
+    skills_map_path = REPO_ROOT / "SKILLS_MAP.md"
+    if skills_map_path.exists():
+        content = skills_map_path.read_text(encoding="utf-8")
+        if f"**`{skill_name}`**" not in content:
+            section_headers = {
+                "general": "### 1. General & Engineering Lifecycle Skills",
+                "anthropic": "### 2. Anthropic Ecosystem Skills",
+                "openai": "### 3. OpenAI Ecosystem Skills",
+            }
+            header = section_headers.get(category)
+            if header and header in content:
+                sec_start = content.find(header)
+                next_sec = content.find("### ", sec_start + len(header))
+                if next_sec == -1:
+                    next_sec = content.find("---", sec_start + len(header))
+                
+                sec_body = content[sec_start:next_sec] if next_sec != -1 else content[sec_start:]
+                lines = sec_body.splitlines()
+                last_table_idx = -1
+                for i, line in enumerate(lines):
+                    if line.strip().startswith("|") and line.strip().endswith("|"):
+                        last_table_idx = i
+                
+                if last_table_idx != -1:
+                    clean_desc = desc.replace("\n", " ").strip()
+                    if len(clean_desc) > 220:
+                        clean_desc = clean_desc[:217] + "..."
+                    raw_url = f"https://raw.githubusercontent.com/xinbato/Skill-Repository/main/skills/{category}/{skill_name}/SKILL.md"
+                    label = "Anthropic Ecosystem" if category == "anthropic" else ("OpenAI Ecosystem" if category == "openai" else "General")
+                    new_row = f"| **`{skill_name}`** | **{skill_name}**: {clean_desc} | {label} | [Fetch Raw]({raw_url}) |"
+                    lines.insert(last_table_idx + 1, new_row)
+                    new_sec_body = "\n".join(lines)
+                    if next_sec != -1:
+                        content = content[:sec_start] + new_sec_body + content[next_sec:]
+                    else:
+                        content = content[:sec_start] + new_sec_body
+                    skills_map_path.write_text(content, encoding="utf-8")
+                    print(f"-> Đã tự động cập nhật SKILLS_MAP.md cho '{skill_name}'")
+
+    # 2. Update README.md
+    readme_path = REPO_ROOT / "README.md"
+    if readme_path.exists():
+        content = readme_path.read_text(encoding="utf-8")
+        if f"[`{skill_name}`]" not in content:
+            section_headers = {
+                "general": "### General & Engineering Lifecycle",
+                "anthropic": "### Anthropic Ecosystem",
+                "openai": "### OpenAI Ecosystem",
+            }
+            header = section_headers.get(category)
+            if header and header in content:
+                sec_start = content.find(header)
+                next_sec = content.find("### ", sec_start + len(header))
+                if next_sec == -1:
+                    next_sec = content.find("---", sec_start + len(header))
+                
+                sec_body = content[sec_start:next_sec] if next_sec != -1 else content[sec_start:]
+                lines = sec_body.splitlines()
+                last_table_idx = -1
+                for i, line in enumerate(lines):
+                    if line.strip().startswith("|") and line.strip().endswith("|"):
+                        last_table_idx = i
+                
+                if last_table_idx != -1:
+                    clean_desc = desc.replace("\n", " ").strip()
+                    if len(clean_desc) > 150:
+                        clean_desc = clean_desc[:147] + "..."
+                    label = "Anthropic Ecosystem" if category == "anthropic" else ("OpenAI Ecosystem" if category == "openai" else "General")
+                    new_row = f"| **[`{skill_name}`](skills/{category}/{skill_name}/)** | {clean_desc} | {label} | [Explore](skills/{category}/{skill_name}/SKILL.md) |"
+                    lines.insert(last_table_idx + 1, new_row)
+                    new_sec_body = "\n".join(lines)
+                    if next_sec != -1:
+                        content = content[:sec_start] + new_sec_body + content[next_sec:]
+                    else:
+                        content = content[:sec_start] + new_sec_body
+                    readme_path.write_text(content, encoding="utf-8")
+                    print(f"-> Đã tự động cập nhật README.md cho '{skill_name}'")
 
 
 def process_candidate_skill(
@@ -293,6 +386,9 @@ def process_candidate_skill(
         shutil.rmtree(dest_skill_dir)
     shutil.copytree(candidate_dir, dest_skill_dir)
     print(f"-> Đã chuyển skill vào: {dest_skill_dir}")
+
+    # Auto-register into SKILLS_MAP.md and README.md
+    update_docs_catalog(skill_name, desc, target_category)
 
     # Run global repo validation
     print("-> Chạy bộ validator tổng thể của repository...")
