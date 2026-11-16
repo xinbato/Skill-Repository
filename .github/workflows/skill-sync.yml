@@ -1,0 +1,84 @@
+name: Automated Skill Ingestion & Sync
+
+on:
+  schedule:
+    # Run weekly on Monday at 00:00 UTC
+    - cron: '0 0 * * 1'
+  workflow_dispatch:
+    inputs:
+      github_repo:
+        description: 'Upstream GitHub repo (owner/repo)'
+        required: true
+        default: 'anthropics/anthropic-tools'
+      skill_path:
+        description: 'Directory path to skill inside repo'
+        required: true
+        default: 'skills/pdf'
+      category:
+        description: 'Target ecosystem category'
+        required: true
+        type: choice
+        options:
+          - general
+          - anthropic
+          - openai
+        default: 'general'
+      dry_run:
+        description: 'Dry run check without writing changes'
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  ingest-and-verify:
+    name: Ingest, Deduplicate & Security Scan
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Run Ingestion Pipeline (4-Gate Verification)
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          python scripts/sync_skills.py \
+            --github-repo "${{ inputs.github_repo }}" \
+            --skill-path "${{ inputs.skill_path }}" \
+            --category "${{ inputs.category }}" \
+            ${{ inputs.dry_run && '--dry-run' || '' }} \
+            --output-pr-data pr_scorecard.md
+
+      - name: Run Structural Repository Validators
+        if: ${{ !inputs.dry_run }}
+        run: |
+          python scripts/validate_skills.py
+          node scripts/validate-skills.js
+
+      - name: Create Pull Request with Scorecard
+        if: ${{ !inputs.dry_run }}
+        uses: peter-evans/create-pull-request@v6
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: "feat(skills): ingest ${{ inputs.skill_path }} from ${{ inputs.github_repo }}"
+          branch: "sync/skill-${{ inputs.category }}-${{ github.run_id }}"
+          delete-branch: true
+          title: "🤖 [Skill Ingest] ${{ inputs.skill_path }} (via ${{ inputs.github_repo }})"
+          body-path: pr_scorecard.md
+          labels: |
+            skill-sync
+            automated-ingest
+            needs-review

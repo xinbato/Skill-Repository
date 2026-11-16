@@ -17,6 +17,7 @@
 
 ### Key Highlights
 - **Full Engineering Lifecycle (SDLC)**: Covers requirements extraction (`interview-me`), specification (`spec-driven-development`), planning (`planning-and-task-breakdown`), test-driven implementation (`test-driven-development`), 5-axis review (`code-review-and-quality`), and shipping (`shipping-and-launch`).
+- **Automated Skill Ingestion & Quality Gates**: 4-gate automated ingestion pipeline (`scripts/sync_skills.py`) featuring semantic deduplication, static security scanning (prompt injection & SAST), and automated Pull Request scorecards.
 - **Zero-Bloat Progressive Disclosure**: Agents load skills in 3 stages (*Discovery* -> *Activation* -> *Execution*), preserving context tokens.
 - **The Portable Map (`SKILLS_MAP.md`)**: Drop `SKILLS_MAP.md` into any project, and your AI Agent will discover and pull skills from GitHub on demand.
 - **Three-Tier Architecture**: Clean separation between **Skills** (*How*), **Personas** (*Who*), and **Commands** (*When*).

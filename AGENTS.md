@@ -132,12 +132,21 @@ When contributing or refactoring skills in this repository:
      --description "<trigger-description>" \
      --dest "skills/<category>"
    ```
-3. Run automated validation:
+3. Or ingest and verify from GitHub with the Automated Pipeline:
+   ```bash
+   # Dry-run check for duplicates and security vulnerabilities
+   python scripts/sync_skills.py --check-local <path-to-skill> --dry-run
+
+   # Ingest a skill from an upstream GitHub repository
+   python scripts/sync_skills.py --github-repo <owner/repo> --skill-path <path> --category <general|anthropic|openai>
+   ```
+4. Run automated validation:
    ```bash
    python scripts/validate_skills.py
    node scripts/validate-skills.js
    node scripts/validate-commands.js
    node scripts/validate-reference-links.js
    node scripts/validate-versions.js
+   python -m unittest scripts/test_ingestion_pipeline.py
    ```
-4. Update both [`SKILLS_MAP.md`](SKILLS_MAP.md) and [`README.md`](README.md).
+5. Update both [`SKILLS_MAP.md`](SKILLS_MAP.md) and [`README.md`](README.md).
