@@ -113,14 +113,22 @@ def normalize_skill_directory(
         fm_modified = True
         changes.append(f"Cập nhật frontmatter 'name' thành '{skill_name}'")
 
-    if not fm.get("description"):
-        fm["description"] = f"Automated skill for {skill_name}"
+    desc = fm.get("description", "")
+    if not desc:
+        fm["description"] = f"Automated skill for {skill_name}. Use when working with {skill_name}."
         fm_modified = True
-        changes.append("Bổ sung 'description' mặc định")
-    elif len(fm["description"]) > MAX_DESC_LENGTH:
-        fm["description"] = fm["description"][:MAX_DESC_LENGTH - 3] + "..."
-        fm_modified = True
-        changes.append(f"Cắt gọn description dưới {MAX_DESC_LENGTH} ký tự")
+        changes.append("Bổ sung 'description' mặc định kèm trigger")
+    else:
+        if not re.search(r"\buse (this )?when\b|\buse (before|after|during)\b", desc, re.I):
+            clean_term = skill_name.replace("-", " ")
+            desc = desc.rstrip(".") + f". Use when you need assistance with {clean_term}."
+            fm["description"] = desc
+            fm_modified = True
+            changes.append("Bổ sung 'Use when ...' trigger vào description")
+        if len(fm["description"]) > MAX_DESC_LENGTH:
+            fm["description"] = fm["description"][:MAX_DESC_LENGTH - 3] + "..."
+            fm_modified = True
+            changes.append(f"Cắt gọn description dưới {MAX_DESC_LENGTH} ký tự")
 
     if not fm.get("license"):
         fm["license"] = default_license

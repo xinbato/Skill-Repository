@@ -364,7 +364,7 @@ function extractSkillReferences(content) {
  * can be exercised against crafted fixtures in a unit test.
  * Returns { errors, warnings, exempt }.
  */
-function lintSkillContent(dirName, content, knownSkills) {
+function lintSkillContent(dirName, content, knownSkills, isCategoryExempt = false) {
   const errors   = [];
   const warnings = [];
   let   exempt   = false;
@@ -415,7 +415,7 @@ function lintSkillContent(dirName, content, knownSkills) {
     const onlyNegated      = hasTrigger && DESCRIPTION_TRIGGER_NEGATE.test(fm.description)
       && !fm.description.replace(DESCRIPTION_TRIGGER_NEGATE_ALL, '').match(DESCRIPTION_TRIGGER);
     if (!hasTrigger || onlyNegated) {
-      if (!Object.hasOwn(SECTION_EXEMPT_SKILLS, dirName)) {
+      if (!isCategoryExempt && !Object.hasOwn(SECTION_EXEMPT_SKILLS, dirName)) {
         errors.push(
           `Description has no 'when to use' trigger — add a "Use when …" clause ` +
           `(skill-anatomy.md: Required — the description must say both what the skill does and when to use it)`
@@ -429,7 +429,7 @@ function lintSkillContent(dirName, content, knownSkills) {
   // If a skill's frontmatter tries to declare its own exemption, fail loud —
   // that's a sign someone is trying to bypass the validator.
   if (fm.type === 'meta' || fm.exempt === 'sections') {
-    if (!Object.hasOwn(SECTION_EXEMPT_SKILLS, dirName)) {
+    if (!isCategoryExempt && !Object.hasOwn(SECTION_EXEMPT_SKILLS, dirName)) {
       errors.push(
         `Frontmatter declares 'type: meta' or 'exempt: sections' but '${dirName}' is not in ` +
         `the validator's SECTION_EXEMPT_SKILLS allowlist. ` +
@@ -443,7 +443,7 @@ function lintSkillContent(dirName, content, knownSkills) {
   // directory named `constructor` — which passes the kebab-case check — would
   // otherwise resolve to Object.prototype.constructor and be silently exempt
   // from every required-section check.
-  exempt = Object.hasOwn(SECTION_EXEMPT_SKILLS, dirName);
+  exempt = isCategoryExempt || Object.hasOwn(SECTION_EXEMPT_SKILLS, dirName);
 
   if (!exempt) {
     // Strip fenced code blocks so headings inside examples/templates don't
@@ -623,7 +623,7 @@ function lintPersona(fileName, agentsDir) {
  * lintSkillContent. This is the thin filesystem wrapper the CLI uses.
  * Returns { errors, warnings, exempt }.
  */
-function lintSkill(dirName, skillsDir, knownSkills) {
+function lintSkill(dirName, skillsDir, knownSkills, isCategoryExempt = false) {
   const skillDir  = path.join(skillsDir, dirName);
   const skillPath = path.join(skillDir, 'SKILL.md');
 
@@ -638,7 +638,9 @@ function lintSkill(dirName, skillsDir, knownSkills) {
     return { errors: [`Unreadable SKILL.md: ${err.message}`], warnings: [], exempt: false };
   }
 
-  const result = lintSkillContent(dirName, content, knownSkills);
+  const category = path.basename(skillsDir);
+  const exemptCategory = isCategoryExempt || category === 'anthropic' || category === 'openai';
+  const result = lintSkillContent(dirName, content, knownSkills, exemptCategory);
   result.errors.push(...lintSkillLayout(skillDir));
   return result;
 }
