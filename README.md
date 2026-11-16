@@ -182,7 +182,7 @@ Pre-configured slash commands for the development lifecycle:
 | **[`theme-factory`](skills/anthropic/theme-factory/)** | Styles artifacts, slides, reports, and HTML pages with 10 pre-set designer themes. | UI/UX & Design | [Explore](skills/anthropic/theme-factory/SKILL.md) |
 | **[`algorithmic-art`](skills/anthropic/algorithmic-art/)** | Generates interactive algorithmic art using p5.js, flow fields, and seeded randomness. | Creative & Art | [Explore](skills/anthropic/algorithmic-art/SKILL.md) |
 | **[`canvas-design`](skills/anthropic/canvas-design/)** | Creates posters and visual documents exported to PNG/PDF adhering to strict grid principles. | Creative & Art | [Explore](skills/anthropic/canvas-design/SKILL.md) |
-
+| **[`brand-guidelines`](skills/anthropic/brand-guidelines/)** | Applies Anthropic official brand colors and typography to any sort of artifact that may benefit from having Anthropic look-and-feel. Use it when br... | Anthropic Ecosystem | [Explore](skills/anthropic/brand-guidelines/SKILL.md) |
 ### OpenAI Ecosystem (`skills/openai/`)
 
 | Skill | Description | Category | Link |

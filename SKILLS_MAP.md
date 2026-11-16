@@ -60,7 +60,7 @@ Document processing, UI design, generative art, and protocol servers originating
 | **`theme-factory`** | **Bộ công cụ áp dụng theme định sẵn**. Áp dụng 10 theme màu sắc và typography đồng bộ cho slide, tài liệu báo cáo và landing page. | UI/UX & Design | [Fetch Raw](https://raw.githubusercontent.com/xinbato/Skill-Repository/main/skills/anthropic/theme-factory/SKILL.md) |
 | **`algorithmic-art`** | **Sáng tạo nghệ thuật thuật toán bằng p5.js**. Tạo generative art tương tác, xử lý flow field và số ngẫu nhiên có kiểm soát (seeded randomness). | Creative & Art | [Fetch Raw](https://raw.githubusercontent.com/xinbato/Skill-Repository/main/skills/anthropic/algorithmic-art/SKILL.md) |
 | **`canvas-design`** | **Thiết kế đồ họa canvas và poster xuất ra PNG/PDF**. Ứng dụng triết lý thiết kế thị giác, căn chỉnh lưới và typography chặt chẽ cho poster, ấn phẩm tĩnh. | Creative & Art | [Fetch Raw](https://raw.githubusercontent.com/xinbato/Skill-Repository/main/skills/anthropic/canvas-design/SKILL.md) |
-
+| **`brand-guidelines`** | **brand-guidelines**: Applies Anthropic official brand colors and typography to any sort of artifact that may benefit from having Anthropic look-and-feel. Use it when brand colors or style guidelines, visual formatting, or company design a... | Anthropic Ecosystem | [Fetch Raw](https://raw.githubusercontent.com/xinbato/Skill-Repository/main/skills/anthropic/brand-guidelines/SKILL.md) |
 ### 3. OpenAI Ecosystem Skills (`skills/openai/`)
 
 Browser automation and application security skills from OpenAI.
