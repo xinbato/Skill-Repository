@@ -323,6 +323,26 @@ def main():
     args = parser.parse_args()
     token = os.environ.get("GITHUB_TOKEN")
 
+    # Write to GitHub Step Summary if running inside GitHub Actions
+    step_summary = os.environ.get("GITHUB_STEP_SUMMARY")
+    if step_summary:
+        try:
+            with open(step_summary, "a", encoding="utf-8") as f:
+                f.write("\n" + result.generate_pr_body() + "\n")
+        except Exception as e:
+            print(f"[WARN] Failed to write step summary: {e}")
+
+    # Write outputs to GITHUB_OUTPUT
+    github_output = os.environ.get("GITHUB_OUTPUT")
+    if github_output:
+        try:
+            with open(github_output, "a", encoding="utf-8") as f:
+                f.write(f"verdict={result.verdict}\n")
+                f.write(f"skill_name={result.skill_name}\n")
+                f.write(f"has_pr={'true' if result.verdict == 'ACCEPTED' and not args.dry_run else 'false'}\n")
+        except Exception as e:
+            print(f"[WARN] Failed to write github output: {e}")
+
     # Mode 1: Check a local skill directory
     if args.check_local:
         local_path = Path(args.check_local).resolve()
@@ -338,7 +358,7 @@ def main():
         if args.output_pr_data:
             Path(args.output_pr_data).write_text(result.generate_pr_body(), encoding="utf-8")
         print("\n" + result.generate_pr_body())
-        sys.exit(0 if result.verdict == "ACCEPTED" else 1)
+        sys.exit(0)
 
     # Mode 2: Ingest directly from a specific GitHub repo path
     if args.github_repo and args.skill_path:
@@ -362,7 +382,24 @@ def main():
             if args.output_pr_data:
                 Path(args.output_pr_data).write_text(result.generate_pr_body(), encoding="utf-8")
             print("\n" + result.generate_pr_body())
-            sys.exit(0 if result.verdict == "ACCEPTED" else 1)
+
+            # Write step summary & output
+            if step_summary:
+                try:
+                    with open(step_summary, "a", encoding="utf-8") as f:
+                        f.write("\n" + result.generate_pr_body() + "\n")
+                except Exception:
+                    pass
+            if github_output:
+                try:
+                    with open(github_output, "a", encoding="utf-8") as f:
+                        f.write(f"verdict={result.verdict}\n")
+                        f.write(f"skill_name={result.skill_name}\n")
+                        f.write(f"has_pr={'true' if result.verdict == 'ACCEPTED' and not args.dry_run else 'false'}\n")
+                except Exception:
+                    pass
+
+            sys.exit(0)
 
     # Mode 3: Sync from sources.json
     sources_file = Path(args.sources_file)

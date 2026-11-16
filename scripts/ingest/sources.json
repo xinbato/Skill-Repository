@@ -3,9 +3,9 @@
   "version": "1.0.0",
   "trusted_sources": [
     {
-      "id": "anthropics-tools",
-      "name": "Anthropic Official Tools",
-      "repo": "anthropics/anthropic-tools",
+      "id": "anthropics-skills",
+      "name": "Anthropic Official Skills",
+      "repo": "anthropics/skills",
       "branch": "main",
       "path": "skills",
       "target_category": "anthropic",

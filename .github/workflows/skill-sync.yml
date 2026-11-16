@@ -9,11 +9,11 @@ on:
       github_repo:
         description: 'Upstream GitHub repo (owner/repo)'
         required: true
-        default: 'anthropics/anthropic-tools'
+        default: 'anthropics/skills'
       skill_path:
         description: 'Directory path to skill inside repo'
         required: true
-        default: 'skills/pdf'
+        default: 'skills/brand-guidelines'
       category:
         description: 'Target ecosystem category'
         required: true
@@ -22,7 +22,7 @@ on:
           - general
           - anthropic
           - openai
-        default: 'general'
+        default: 'anthropic'
       dry_run:
         description: 'Dry run check without writing changes'
         type: boolean
@@ -52,6 +52,7 @@ jobs:
           node-version: "20"
 
       - name: Run Ingestion Pipeline (4-Gate Verification)
+        id: sync
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
@@ -63,13 +64,13 @@ jobs:
             --output-pr-data pr_scorecard.md
 
       - name: Run Structural Repository Validators
-        if: ${{ !inputs.dry_run }}
+        if: ${{ !inputs.dry_run && steps.sync.outputs.has_pr == 'true' }}
         run: |
           python scripts/validate_skills.py
           node scripts/validate-skills.js
 
       - name: Create Pull Request with Scorecard
-        if: ${{ !inputs.dry_run }}
+        if: ${{ !inputs.dry_run && steps.sync.outputs.has_pr == 'true' }}
         uses: peter-evans/create-pull-request@v6
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
