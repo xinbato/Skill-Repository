@@ -36,7 +36,7 @@ from ingest.dedup import (
     check_candidate_overlap,
     load_existing_skills,
 )
-from ingest.normalizer import normalize_skill_directory, sanitize_skill_name
+from ingest.normalizer import NAME_PATTERN, normalize_skill_directory, parse_frontmatter, sanitize_skill_name
 from ingest.security import SecurityReport, scan_skill_directory
 
 
@@ -54,7 +54,7 @@ class IngestionResult:
     def generate_pr_body(self) -> str:
         """Generate GitHub PR body with comprehensive Scorecard."""
         status_badge = "✅ SẴN SÀNG DUYỆT" if self.verdict == "ACCEPTED" else f"⚠️ CẦN LƯU Ý ({self.verdict})"
-        
+
         md = [
             f"## 🤖 Báo cáo Tự động Đồng bộ Skill: `{self.skill_name}`",
             "",
@@ -103,16 +103,64 @@ class IngestionResult:
         return "\n".join(md)
 
 
+def emit_github_outputs(result: IngestionResult, dry_run: bool = False):
+    """Write outcome to GitHub Step Summary and GITHUB_OUTPUT."""
+    step_summary = os.environ.get("GITHUB_STEP_SUMMARY")
+    if step_summary:
+        try:
+            with open(step_summary, "a", encoding="utf-8") as f:
+                f.write("\n" + result.generate_pr_body() + "\n")
+        except Exception as e:
+            print(f"[WARN] Failed to write step summary: {e}")
+
+    github_output = os.environ.get("GITHUB_OUTPUT")
+    if github_output:
+        try:
+            with open(github_output, "a", encoding="utf-8") as f:
+                f.write(f"verdict={result.verdict}\n")
+                f.write(f"skill_name={result.skill_name}\n")
+                f.write(f"category={result.target_category}\n")
+                f.write(f"has_pr={'true' if result.verdict == 'ACCEPTED' and not dry_run else 'false'}\n")
+        except Exception as e:
+            print(f"[WARN] Failed to write github output: {e}")
+
+
+def emit_no_skills_summary():
+    """Write message when auto-sync finds no new skills to ingest."""
+    step_summary = os.environ.get("GITHUB_STEP_SUMMARY")
+    if step_summary:
+        try:
+            with open(step_summary, "a", encoding="utf-8") as f:
+                f.write("\n### 🤖 Auto-Sync Skill Ingestion\n- Không phát hiện skill mới cần nạp từ các nguồn tin cậy.\n")
+        except Exception as e:
+            print(f"[WARN] Failed to write step summary: {e}")
+
+    github_output = os.environ.get("GITHUB_OUTPUT")
+    if github_output:
+        try:
+            with open(github_output, "a", encoding="utf-8") as f:
+                f.write("verdict=NO_NEW_SKILLS\ncategory=\nskill_name=\nhas_pr=false\n")
+        except Exception as e:
+            print(f"[WARN] Failed to write github output: {e}")
+
+
 def github_api_get(url: str, token: Optional[str] = None) -> Any:
-    """Fetch JSON from GitHub API with optional auth token."""
+    """Fetch JSON from GitHub API with rate limit detection."""
     req = urllib.request.Request(url)
     req.add_header("User-Agent", "Skill-Repository-Sync-Bot")
     req.add_header("Accept", "application/vnd.github.v3+json")
     if token:
         req.add_header("Authorization", f"Bearer {token}")
 
-    with urllib.request.urlopen(req, timeout=30) as response:
-        return json.loads(response.read().decode("utf-8"))
+    try:
+        with urllib.request.urlopen(req, timeout=30) as response:
+            return json.loads(response.read().decode("utf-8"))
+    except urllib.error.HTTPError as e:
+        if e.code in (403, 429):
+            remaining = e.headers.get("X-RateLimit-Remaining", "0")
+            reset = e.headers.get("X-RateLimit-Reset", "unknown")
+            print(f"[ERROR] GitHub API Rate Limit Reached (HTTP {e.code}). Remaining: {remaining}, Reset: {reset}")
+        raise
 
 
 def download_github_file(download_url: str, dest_path: Path, token: Optional[str] = None):
@@ -135,12 +183,13 @@ def download_github_folder(
     token: Optional[str] = None,
     ref: str = "main"
 ) -> bool:
-    """Recursively download directory contents from GitHub via contents API."""
-    url = f"https://api.github.com/repos/{owner}/{repo}/contents/{path}?ref={ref}"
+    """Recursively download directory contents from GitHub via contents API, handling path separators."""
+    clean_path = path.replace("\\", "/").strip("/")
+    url = f"https://api.github.com/repos/{owner}/{repo}/contents/{clean_path}?ref={ref}"
     try:
         items = github_api_get(url, token)
     except Exception as e:
-        print(f"[ERROR] Failed to fetch folder {path} from {owner}/{repo}: {e}")
+        print(f"[ERROR] Failed to fetch folder {clean_path} from {owner}/{repo}: {e}")
         return False
 
     if not isinstance(items, list):
@@ -212,14 +261,14 @@ def update_docs_catalog(skill_name: str, desc: str, category: str):
                 next_sec = content.find("### ", sec_start + len(header))
                 if next_sec == -1:
                     next_sec = content.find("---", sec_start + len(header))
-                
+
                 sec_body = content[sec_start:next_sec] if next_sec != -1 else content[sec_start:]
                 lines = sec_body.splitlines()
                 last_table_idx = -1
                 for i, line in enumerate(lines):
                     if line.strip().startswith("|") and line.strip().endswith("|"):
                         last_table_idx = i
-                
+
                 if last_table_idx != -1:
                     clean_desc = desc.replace("\n", " ").strip()
                     if len(clean_desc) > 220:
@@ -257,14 +306,14 @@ def update_docs_catalog(skill_name: str, desc: str, category: str):
                 next_sec = content.find("### ", sec_start + len(header))
                 if next_sec == -1:
                     next_sec = content.find("---", sec_start + len(header))
-                
+
                 sec_body = content[sec_start:next_sec] if next_sec != -1 else content[sec_start:]
                 lines = sec_body.splitlines()
                 last_table_idx = -1
                 for i, line in enumerate(lines):
                     if line.strip().startswith("|") and line.strip().endswith("|"):
                         last_table_idx = i
-                
+
                 if last_table_idx != -1:
                     clean_desc = desc.replace("\n", " ").strip()
                     if len(clean_desc) > 150:
@@ -289,18 +338,28 @@ def process_candidate_skill(
     candidate_dir: Path,
     source_repo: str,
     target_category: str = "general",
-    dry_run: bool = False
+    dry_run: bool = False,
+    allowed_licenses: Optional[List[str]] = None
 ) -> IngestionResult:
     """Run a candidate skill through the 4-gate ingestion pipeline."""
     raw_name = candidate_dir.name
     skill_name = sanitize_skill_name(raw_name)
+
+    if not skill_name or not NAME_PATTERN.match(skill_name):
+        return IngestionResult(
+            skill_name=raw_name,
+            target_category=target_category,
+            source_repo=source_repo,
+            verdict="REJECTED_VALIDATION",
+            details=f"Tên skill không hợp lệ: '{raw_name}'"
+        )
 
     print(f"\n==================================================")
     print(f"Bắt đầu kiểm duyệt Skill ứng viên: '{skill_name}'")
     print(f"Nguồn: {source_repo} | Danh mục dự kiến: skills/{target_category}/")
     print(f"==================================================")
 
-    # Gate 1: Check SKILL.md existence
+    # Gate 1: Check SKILL.md existence & License
     skill_md = candidate_dir / "SKILL.md"
     if not skill_md.exists():
         return IngestionResult(
@@ -311,13 +370,26 @@ def process_candidate_skill(
             details="Không có file SKILL.md"
         )
 
-    # Read content & description
     content = skill_md.read_text(encoding="utf-8", errors="replace")
-    desc = ""
-    for line in content.splitlines()[:30]:
-        if line.strip().startswith("description:"):
-            desc = line.split(":", 1)[1].strip().strip('"').strip("'")
-            break
+    fm, _ = parse_frontmatter(content)
+
+    # License verification if allowed_licenses specified
+    cand_lic = fm.get("license")
+    if allowed_licenses and cand_lic and cand_lic not in allowed_licenses:
+        return IngestionResult(
+            skill_name=skill_name,
+            target_category=target_category,
+            source_repo=source_repo,
+            verdict="REJECTED_VALIDATION",
+            details=f"License '{cand_lic}' không nằm trong danh sách được phép ({allowed_licenses})."
+        )
+
+    desc = fm.get("description", "")
+    if not desc:
+        for line in content.splitlines()[:30]:
+            if line.strip().startswith("description:"):
+                desc = line.split(":", 1)[1].strip().strip('"').strip("'")
+                break
 
     # Gate 2: Deduplication Check
     print("-> Đang kiểm tra trùng lặp với danh mục kỹ năng hiện có...")
@@ -373,9 +445,18 @@ def process_candidate_skill(
             details="Không thể chuẩn hóa tên hoặc cấu trúc."
         )
 
-    # Destination
+    # Destination paths with safety verification
     dest_category_dir = REPO_ROOT / "skills" / target_category
     dest_skill_dir = dest_category_dir / skill_name
+
+    if not skill_name or dest_skill_dir == dest_category_dir or dest_skill_dir == REPO_ROOT:
+        return IngestionResult(
+            skill_name=skill_name,
+            target_category=target_category,
+            source_repo=source_repo,
+            verdict="REJECTED_VALIDATION",
+            details="Đường dẫn đích không an toàn."
+        )
 
     if dry_run:
         print(f"-> [DRY-RUN] Sẵn sàng chuyển tới: {dest_skill_dir}")
@@ -444,6 +525,7 @@ def auto_sync_sources(
         path = src.get("path", "skills")
         branch = src.get("branch", "main")
         category = src.get("target_category", "general")
+        allowed_licenses = src.get("allowed_licenses")
 
         print(f"\n[AUTO-SYNC] Đang quét nguồn: {repo} (nhánh: {branch}, path: {path})...")
         try:
@@ -452,7 +534,8 @@ def auto_sync_sources(
             print(f"[WARN] Cấu hình repo không hợp lệ: {repo}")
             continue
 
-        url = f"https://api.github.com/repos/{owner}/{repo_name}/contents/{path}?ref={branch}"
+        clean_path = path.replace("\\", "/").strip("/")
+        url = f"https://api.github.com/repos/{owner}/{repo_name}/contents/{clean_path}?ref={branch}"
 
         try:
             items = github_api_get(url, token)
@@ -470,8 +553,7 @@ def auto_sync_sources(
             raw_skill_name = item.get("name")
             sanitized_name = sanitize_skill_name(raw_skill_name)
 
-            # Skip if already exists in repo
-            if sanitized_name in existing_names:
+            if not sanitized_name or sanitized_name in existing_names:
                 continue
 
             print(f"\n[PHÁT HIỆN SKILL MỚI] '{sanitized_name}' tại {repo}/{item.get('path')}")
@@ -489,7 +571,8 @@ def auto_sync_sources(
                     candidate_dir=tmp_skill_dir,
                     source_repo=f"{repo}/{item.get('path')}",
                     target_category=category,
-                    dry_run=dry_run
+                    dry_run=dry_run,
+                    allowed_licenses=allowed_licenses
                 )
 
                 if res.verdict == "ACCEPTED":
@@ -518,26 +601,6 @@ def main():
     args = parser.parse_args()
     token = os.environ.get("GITHUB_TOKEN")
 
-    # Write to GitHub Step Summary if running inside GitHub Actions
-    step_summary = os.environ.get("GITHUB_STEP_SUMMARY")
-    if step_summary:
-        try:
-            with open(step_summary, "a", encoding="utf-8") as f:
-                f.write("\n" + result.generate_pr_body() + "\n")
-        except Exception as e:
-            print(f"[WARN] Failed to write step summary: {e}")
-
-    # Write outputs to GITHUB_OUTPUT
-    github_output = os.environ.get("GITHUB_OUTPUT")
-    if github_output:
-        try:
-            with open(github_output, "a", encoding="utf-8") as f:
-                f.write(f"verdict={result.verdict}\n")
-                f.write(f"skill_name={result.skill_name}\n")
-                f.write(f"has_pr={'true' if result.verdict == 'ACCEPTED' and not args.dry_run else 'false'}\n")
-        except Exception as e:
-            print(f"[WARN] Failed to write github output: {e}")
-
     # Mode 1: Check a local skill directory
     if args.check_local:
         local_path = Path(args.check_local).resolve()
@@ -550,10 +613,11 @@ def main():
             target_category=args.category,
             dry_run=args.dry_run
         )
+        emit_github_outputs(result, args.dry_run)
         if args.output_pr_data:
             Path(args.output_pr_data).write_text(result.generate_pr_body(), encoding="utf-8")
         print("\n" + result.generate_pr_body())
-        sys.exit(0)
+        sys.exit(0 if result.verdict == "ACCEPTED" else 1)
 
     # Mode 2: Ingest directly from a specific GitHub repo path
     if args.github_repo and args.skill_path:
@@ -574,27 +638,11 @@ def main():
                 target_category=args.category,
                 dry_run=args.dry_run
             )
+            emit_github_outputs(result, args.dry_run)
             if args.output_pr_data:
                 Path(args.output_pr_data).write_text(result.generate_pr_body(), encoding="utf-8")
             print("\n" + result.generate_pr_body())
-
-            # Write step summary & output
-            if step_summary:
-                try:
-                    with open(step_summary, "a", encoding="utf-8") as f:
-                        f.write("\n" + result.generate_pr_body() + "\n")
-                except Exception:
-                    pass
-            if github_output:
-                try:
-                    with open(github_output, "a", encoding="utf-8") as f:
-                        f.write(f"verdict={result.verdict}\n")
-                        f.write(f"skill_name={result.skill_name}\n")
-                        f.write(f"has_pr={'true' if result.verdict == 'ACCEPTED' and not args.dry_run else 'false'}\n")
-                except Exception:
-                    pass
-
-            sys.exit(0)
+            sys.exit(0 if result.verdict == "ACCEPTED" else 1)
 
     # Mode 3: Auto-sync from sources.json
     sources_file = Path(args.sources_file)
@@ -608,32 +656,12 @@ def main():
 
     if results:
         first = results[0]
+        emit_github_outputs(first, args.dry_run)
         if args.output_pr_data:
             Path(args.output_pr_data).write_text(first.generate_pr_body(), encoding="utf-8")
-        if step_summary:
-            try:
-                with open(step_summary, "a", encoding="utf-8") as f:
-                    f.write("\n" + first.generate_pr_body() + "\n")
-            except Exception:
-                pass
-        if github_output:
-            try:
-                with open(github_output, "a", encoding="utf-8") as f:
-                    f.write(f"verdict={first.verdict}\n")
-                    f.write(f"skill_name={first.skill_name}\n")
-                    f.write(f"category={first.target_category}\n")
-                    f.write(f"has_pr={'true' if not args.dry_run else 'false'}\n")
-            except Exception:
-                pass
     else:
         print("\n[AUTO-SYNC] Đã quét toàn bộ nguồn. Không có kỹ năng mới nào cần nạp.")
-        if github_output:
-            try:
-                with open(github_output, "a", encoding="utf-8") as f:
-                    f.write("verdict=NO_NEW_SKILLS\n")
-                    f.write("has_pr=false\n")
-            except Exception:
-                pass
+        emit_no_skills_summary()
 
     sys.exit(0)
 

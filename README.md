@@ -70,11 +70,13 @@ Skill-Repository/
 │   └── web-performance-auditor.md
 ├── commands/                         # Lifecycle slash commands
 │   ├── spec.toml
-│   ├── plan.toml
+│   ├── planning.toml
 │   ├── build.toml
 │   ├── test.toml
 │   ├── review.toml
 │   ├── code-simplify.toml
+│   ├── constraints.toml
+│   ├── webperf.toml
 │   └── ship.toml
 ├── references/                       # Shared authoritative engineering checklists
 │   ├── definition-of-done.md
@@ -87,7 +89,7 @@ Skill-Repository/
 │   ├── skill-anatomy.md
 │   ├── antigravity-setup.md
 │   ├── cursor-setup.md
-│   ├── claude-code-setup.md
+│   ├── gemini-cli-setup.md
 │   └── codex-setup.md
 ├── scripts/                          # Automated quality gates and linters
 │   ├── validate_skills.py
@@ -115,6 +117,8 @@ Pre-configured slash commands for the development lifecycle:
 | **VERIFY** | `/test` | Enforces test-driven development (Red-Green-Refactor). |
 | **REVIEW** | `/review` | Conducts 5-axis code review (Correctness, Readability, Architecture, Security, Performance). |
 | **SIMPLIFY** | `/code-simplify` | Refactors for maximum clarity without behavioral changes. |
+| **CONSTRAIN** | `/constraints` | Defines and enforces project quality bars, sane defaults, and CONSTRAINTS.md. |
+| **AUDIT** | `/webperf` | Runs a web performance audit via the web-performance-auditor persona. |
 | **SHIP** | `/ship` | Synthesizes persona reports and verifies pre-launch gates. |
 
 ---
@@ -155,7 +159,8 @@ Pre-configured slash commands for the development lifecycle:
 | **[`theme-factory`](skills/anthropic/theme-factory/)** | Styles artifacts, slides, reports, and HTML pages with 10 pre-set designer themes. | UI/UX & Design | [Explore](skills/anthropic/theme-factory/SKILL.md) |
 | **[`algorithmic-art`](skills/anthropic/algorithmic-art/)** | Generates interactive algorithmic art using p5.js, flow fields, and seeded randomness. | Creative & Art | [Explore](skills/anthropic/algorithmic-art/SKILL.md) |
 | **[`canvas-design`](skills/anthropic/canvas-design/)** | Creates posters and visual documents exported to PNG/PDF adhering to strict grid principles. | Creative & Art | [Explore](skills/anthropic/canvas-design/SKILL.md) |
-| **[`brand-guidelines`](skills/anthropic/brand-guidelines/)** | Applies Anthropic official brand colors and typography to any sort of artifact that may benefit from having Anthropic look-and-feel. Use it when br... | Anthropic Ecosystem | [Explore](skills/anthropic/brand-guidelines/SKILL.md) |
+| **[`brand-guidelines`](skills/anthropic/brand-guidelines/)** | Applies Anthropic official brand colors, typography, and styling standards to artifacts, slides, and docs. | UI/UX & Design | [Explore](skills/anthropic/brand-guidelines/SKILL.md) |
+
 ### OpenAI Ecosystem (`skills/openai/`)
 
 | Skill | Description | Category | Link |

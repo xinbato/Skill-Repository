@@ -1,3 +1,10 @@
+#!/usr/bin/env python3
+# /// script
+# requires-python = ">=3.9"
+# dependencies = [
+#     "pdfplumber",
+# ]
+# ///
 """
 Extract form structure from a non-fillable PDF.
 

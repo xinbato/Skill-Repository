@@ -1,3 +1,8 @@
+#!/usr/bin/env python3
+# /// script
+# requires-python = ">=3.9"
+# dependencies = []
+# ///
 """Add a slide to a PPTX: duplicate an existing slide or instantiate a layout.
 
 Does all of the package bookkeeping, so the deck stays valid:

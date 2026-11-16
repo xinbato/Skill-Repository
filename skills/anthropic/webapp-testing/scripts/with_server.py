@@ -1,4 +1,8 @@
 #!/usr/bin/env python3
+# /// script
+# requires-python = ">=3.9"
+# dependencies = []
+# ///
 """
 Start one or more servers, wait for them to be ready, run a command, then clean up.
 

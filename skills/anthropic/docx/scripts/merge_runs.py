@@ -1,3 +1,10 @@
+#!/usr/bin/env python3
+# /// script
+# requires-python = ">=3.9"
+# dependencies = [
+#     "defusedxml",
+# ]
+# ///
 """Merge adjacent identically-formatted runs in a DOCX.
 
 Word fragments paragraph text across many <w:r> elements (revision ids,

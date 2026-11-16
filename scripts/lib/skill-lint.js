@@ -95,6 +95,7 @@ const SECTION_EXEMPT_SKILLS = {
   'frontend-design': 'Anthropic official skill',
   'theme-factory': 'Anthropic official skill',
   'algorithmic-art': 'Anthropic official skill',
+  'brand-guidelines': 'Anthropic official skill',
   'canvas-design': 'Anthropic official skill',
   'playwright': 'OpenAI official skill',
   'security-threat-model': 'OpenAI official skill',

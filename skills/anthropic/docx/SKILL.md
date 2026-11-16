@@ -11,7 +11,7 @@ A `.docx` is a ZIP archive of XML files. Choose your approach by task:
 | Task | Approach |
 |---|---|
 | **Create** a new document | Write a `docx` (npm) script — see gotchas below |
-| **Edit** an existing document | `unzip` → edit `word/document.xml` → `zip` (docx-js cannot open existing files) |
+| **Edit** an existing document | `unzip` → edit `word/document.xml` → repack with `zip` (docx-js cannot open existing files) |
 | **Read** content | `pandoc -t markdown file.docx` |
 
 > Script paths below are relative to this skill's directory.

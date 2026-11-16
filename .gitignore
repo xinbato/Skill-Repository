@@ -1,4 +1,4 @@
-# Python
+# Python bytecode & cache
 __pycache__/
 *.py[cod]
 *$py.class
@@ -24,15 +24,73 @@ wheels/
 .installed.cfg
 *.egg
 
-# IDE & OS
+# Testing & Code Quality
+.pytest_cache/
+.coverage
+coverage/
+htmlcov/
+.mypy_cache/
+.ruff_cache/
+*.log
+
+# Node & Package Managers
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+.npm/
+
+# IDE, Editors & Workspaces
 .vscode/
 .idea/
-.DS_Store
-Thumbs.db
+*.swp
+*.swo
+*~
+*.orig
+*.rej
+*.bak
+*.tmp
+.sublime-*
+*.code-workspace
 
-# Temporary agent files
+# Operating System Debris
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+desktop.ini
+
+# Secrets, Credentials & Local Environments
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.crt
+*.pfx
+*.p12
+
+# Native Binaries & Shared Libraries
+*.exe
+*.dll
+*.dylib
+
+# Evaluation Artifacts & Dynamic Outputs
+evals/output/
+**/evals/output/
+evals/results/
+**/evals/results/
+
+# Temporary Agent Files & Experiments
 .agent-skills-temp/
 .temp-skills/
 .agents/teamwork/
-*/evals/output/
 SKILL_COMPARISON.md
+
+# Ephemeral CI / Ingestion Artifacts
+pr_scorecard.md
+pr_scorecard*.md

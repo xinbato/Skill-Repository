@@ -71,13 +71,13 @@ jobs:
           fi
 
       - name: Run Structural Repository Validators
-        if: ${{ !inputs.dry_run && steps.sync.outputs.has_pr == 'true' }}
+        if: ${{ steps.sync.outputs.has_pr == 'true' }}
         run: |
           python scripts/validate_skills.py
           node scripts/validate-skills.js
 
       - name: Create Pull Request with Scorecard
-        if: ${{ !inputs.dry_run && steps.sync.outputs.has_pr == 'true' }}
+        if: ${{ steps.sync.outputs.has_pr == 'true' }}
         uses: peter-evans/create-pull-request@v6
         with:
           token: ${{ secrets.GITHUB_TOKEN }}

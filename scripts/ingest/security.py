@@ -14,18 +14,50 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import List, Tuple
 
-# Suspicious patterns in prompts / markdown
+# Suspicious patterns in prompts / markdown: (pattern, message, is_critical)
 SUSPICIOUS_PROMPT_PATTERNS = [
-    (re.compile(r"[\u200B\u200C\u200D\uFEFF]"), "Phát hiện ký tự Unicode ẩn (Zero-width spaces) có thể dùng cho Prompt Injection"),
-    (re.compile(r"(?:curl|wget|fetch|axios|http)\s+[^\n]*?(?:webhook\.site|requestbin|ngrok-free\.app|burpcollaborator)", re.I), "Phát hiện URL webhook/exfiltration đáng ngờ"),
-    (re.compile(r"(?:cat|read|curl|upload)[^\n]*?(?:\.env|\.ssh/id_rsa|\.aws/credentials|\.gemini/config)", re.I), "Chỉ dẫn cố gắng đọc hoặc trích xuất secret/file nhạy cảm"),
-    (re.compile(r"rm\s+-rf\s+(?:/|/\*|~|\$HOME)", re.I), "Lệnh xóa hệ thống cực kỳ nguy hiểm (rm -rf /)"),
-    (re.compile(r"(?:format\s+[c-z]:|mkfs\.[a-z0-9]+)", re.I), "Lệnh format ổ đĩa / partition"),
-    (re.compile(r"(?:\:\{\s*\:\s*\|\s*\:\s*\&\s*\}\;\s*\:)", re.I), "Fork bomb script"),
+    (
+        re.compile(r"[\u200B\u200C\u200D\uFEFF]"),
+        "Phát hiện ký tự Unicode ẩn (Zero-width spaces) có thể dùng cho Prompt Injection",
+        True
+    ),
+    (
+        re.compile(
+            r"(?:https?://|[^\w]|^)(?:[a-zA-Z0-9.-]+\.)?(?:webhook\.site|requestbin\.(?:net|com)|ngrok-free\.app|burpcollaborator\.net|pipedream\.net|oastify\.com|interactsh\.com|beeceptor\.com)",
+            re.I
+        ),
+        "Phát hiện URL webhook/exfiltration đáng ngờ",
+        True
+    ),
+    (
+        re.compile(
+            r"(?:cat|read|curl|upload|type|Get-Content|scp|nc|ncat|netcat)[^\n]*?(?:\.env|\.ssh[/\\].*|\.aws[/\\].*|\.gemini[/\\].*|\.git-credentials)",
+            re.I
+        ),
+        "Chỉ dẫn cố gắng đọc hoặc trích xuất secret/file nhạy cảm",
+        True
+    ),
+    (
+        re.compile(r"(?:rm\s+-rf\s+(?:/|/\*|~|\$HOME)|del\s+/[fFqsS]+\s+[cC]:\\|rd\s+/[sS]\s+/[qQ]\s+[cC]:\\)", re.I),
+        "Lệnh xóa hệ thống cực kỳ nguy hiểm (rm -rf /)",
+        True
+    ),
+    (
+        re.compile(r"(?:format\s+[c-z]:|mkfs\.[a-z0-9]+)", re.I),
+        "Lệnh format ổ đĩa / partition",
+        True
+    ),
+    (
+        re.compile(r"(?:\:\{\s*\:\s*\|\s*\:\s*\&\s*\}\;\s*\:)", re.I),
+        "Fork bomb script",
+        True
+    ),
+    (
+        re.compile(r"(?:bash\s+-i\s+>&|nc\s+-[e|c]\s+|ncat\s+-[e|c]\s+)", re.I),
+        "Lệnh reverse shell nguy hiểm",
+        True
+    ),
 ]
-
-# Ast checks for python scripts
-DANGEROUS_CALLS = {"eval", "exec"}
 
 
 @dataclass
@@ -62,13 +94,15 @@ def scan_markdown_content(content: str, filename: str = "SKILL.md") -> Tuple[Lis
     criticals = []
     warnings = []
 
-    for pattern, message in SUSPICIOUS_PROMPT_PATTERNS:
+    for pattern, message, is_critical in SUSPICIOUS_PROMPT_PATTERNS:
         match = pattern.search(content)
         if match:
-            if "Zero-width" in message or "exfiltration" in message or "nguy hiểm" in message:
-                criticals.append(f"{filename}: {message} -> `{match.group(0)[:60]}`")
+            matched_snippet = match.group(0)[:60].replace("\n", " ")
+            formatted = f"{filename}: {message} -> `{matched_snippet}`"
+            if is_critical:
+                criticals.append(formatted)
             else:
-                warnings.append(f"{filename}: {message}")
+                warnings.append(formatted)
 
     return criticals, warnings
 
@@ -78,11 +112,32 @@ class PythonASTVisitor(ast.NodeVisitor):
         self.filename = filename
         self.criticals: List[str] = []
         self.warnings: List[str] = []
+        self.subprocess_aliases = {"subprocess"}
+        self.os_aliases = {"os"}
+        self.subprocess_funcs = set()
+        self.os_funcs = set()
+
+    def visit_Import(self, node: ast.Import):
+        for alias in node.names:
+            if alias.name == "subprocess":
+                self.subprocess_aliases.add(alias.asname or "subprocess")
+            elif alias.name == "os":
+                self.os_aliases.add(alias.asname or "os")
+        self.generic_visit(node)
+
+    def visit_ImportFrom(self, node: ast.ImportFrom):
+        if node.module == "subprocess":
+            for alias in node.names:
+                self.subprocess_funcs.add(alias.asname or alias.name)
+        elif node.module == "os":
+            for alias in node.names:
+                self.os_funcs.add(alias.asname or alias.name)
+        self.generic_visit(node)
 
     def visit_Call(self, node: ast.Call):
-        # Check eval() / exec()
+        # 1. Eval / Exec / getattr evasion
         if isinstance(node.func, ast.Name):
-            if node.func.id in DANGEROUS_CALLS:
+            if node.func.id in ("eval", "exec"):
                 self.criticals.append(
                     f"{self.filename}:{node.lineno}: Sử dụng hàm nguy hiểm '{node.func.id}()'"
                 )
@@ -90,25 +145,64 @@ class PythonASTVisitor(ast.NodeVisitor):
                 self.warnings.append(
                     f"{self.filename}:{node.lineno}: Dynamic import '__import__()' được phát hiện"
                 )
-
-        # Check os.system(...)
-        elif isinstance(node.func, ast.Attribute):
-            if isinstance(node.func.value, ast.Name):
-                module_name = node.func.value.id
-                method_name = node.func.attr
-                if module_name == "os" and method_name == "system":
+            elif node.func.id == "getattr":
+                if (
+                    len(node.args) >= 2
+                    and isinstance(node.args[1], ast.Constant)
+                    and node.args[1].value in ("eval", "exec")
+                ):
                     self.criticals.append(
-                        f"{self.filename}:{node.lineno}: os.system() không an toàn. Hãy dùng subprocess có validation."
+                        f"{self.filename}:{node.lineno}: Sử dụng getattr nguy hiểm lấy hàm '{node.args[1].value}()'"
                     )
-                elif module_name == "subprocess" and method_name in ("run", "Popen", "call"):
-                    # Check for shell=True
-                    for kw in node.keywords:
-                        if kw.arg == "shell" and isinstance(kw.value, ast.Constant) and kw.value.value is True:
-                            self.warnings.append(
-                                f"{self.filename}:{node.lineno}: subprocess gọi với shell=True. Tiềm ẩn nguy cơ command injection."
-                            )
+            elif node.func.id in self.os_funcs:
+                if node.func.id in ("system", "popen"):
+                    self.criticals.append(
+                        f"{self.filename}:{node.lineno}: os.{node.func.id}() không an toàn."
+                    )
+            elif node.func.id in self.subprocess_funcs:
+                self._check_subprocess_shell(node)
+
+        elif isinstance(node.func, ast.Attribute):
+            attr = node.func.attr
+            # Check builtins.eval / __builtins__.eval / any_obj.eval
+            if attr in ("eval", "exec"):
+                self.criticals.append(
+                    f"{self.filename}:{node.lineno}: Sử dụng hàm nguy hiểm '{attr}()'"
+                )
+
+            if isinstance(node.func.value, ast.Name):
+                val_id = node.func.value.id
+                if val_id in self.os_aliases:
+                    if attr in (
+                        "system", "popen", "spawnl", "spawnle", "spawnlp",
+                        "spawnlpe", "spawnp", "spawnv", "spawnve", "spawnvp", "spawnvpe"
+                    ):
+                        self.criticals.append(
+                            f"{self.filename}:{node.lineno}: os.{attr}() không an toàn. Hãy dùng subprocess có validation."
+                        )
+                elif val_id in self.subprocess_aliases:
+                    if attr in ("run", "Popen", "call", "check_output", "check_call"):
+                        self._check_subprocess_shell(node)
+                elif val_id == "importlib" and attr in ("import_module", "__import__"):
+                    self.warnings.append(
+                        f"{self.filename}:{node.lineno}: Dynamic import '{val_id}.{attr}()' được phát hiện"
+                    )
 
         self.generic_visit(node)
+
+    def _check_subprocess_shell(self, node: ast.Call):
+        func_name = getattr(node.func, "attr", getattr(node.func, "id", "subprocess"))
+        for kw in node.keywords:
+            if kw.arg == "shell":
+                if isinstance(kw.value, ast.Constant):
+                    if bool(kw.value.value):
+                        self.warnings.append(
+                            f"{self.filename}:{node.lineno}: {func_name}() gọi với shell={kw.value.value}. Tiềm ẩn nguy cơ command injection."
+                        )
+                else:
+                    self.warnings.append(
+                        f"{self.filename}:{node.lineno}: {func_name}() gọi với dynamic shell argument. Tiềm ẩn nguy cơ command injection."
+                    )
 
 
 def scan_python_script(py_path: Path) -> Tuple[List[str], List[str]]:
@@ -172,10 +266,13 @@ def scan_skill_directory(skill_dir: Path) -> SecurityReport:
 
         for sh_file in scripts_dir.glob("*.sh"):
             content = sh_file.read_text(encoding="utf-8", errors="replace")
-            if "curl " in content and "| bash" in content:
-                report.critical_errors.append(f"scripts/{sh_file.name}: Phát hiện pattern nguy hiểm 'curl | bash'")
-            if "wget " in content and "| sh" in content:
-                report.critical_errors.append(f"scripts/{sh_file.name}: Phát hiện pattern nguy hiểm 'wget | sh'")
+            if re.search(r"(?:curl|wget)\s+[^\n|;]+?\|\s*(?:sudo\s+)?(?:/bin/)?(?:bash|sh)", content, re.I):
+                report.critical_errors.append(f"scripts/{sh_file.name}: Phát hiện pattern nguy hiểm 'curl/wget | bash'")
+
+        for win_script in list(scripts_dir.glob("*.ps1")) + list(scripts_dir.glob("*.bat")) + list(scripts_dir.glob("*.cmd")):
+            content = win_script.read_text(encoding="utf-8", errors="replace")
+            if re.search(r"(?:iex|Invoke-Expression)[^\n]*?(?:DownloadString|DownloadFile|WebRequest|WebClient|curl|iwr)", content, re.I):
+                report.critical_errors.append(f"scripts/{win_script.name}: Phát hiện pattern nguy hiểm tải và thực thi mã từ xa")
 
     if report.critical_errors:
         report.is_safe = False

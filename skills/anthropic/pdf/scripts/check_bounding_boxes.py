@@ -1,3 +1,8 @@
+#!/usr/bin/env python3
+# /// script
+# requires-python = ">=3.9"
+# dependencies = []
+# ///
 from dataclasses import dataclass
 import json
 import sys

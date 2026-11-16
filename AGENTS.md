@@ -43,6 +43,7 @@ skills/
   - Production release readiness & checklist -> `skills/general/shipping-and-launch`
   - Discover & install open ecosystem skills -> `skills/general/find-skills`
   - Scaffold / generate a new skill -> `skills/general/create-skill-v2`
+  - Scaffold standard skill (v1) -> `skills/general/create-skill`
   - Git commits / Conventional Commits / PR -> `skills/general/git-workflow`
   - Academic & professional correspondence -> `skills/general/email-teacher`
   - PDF manipulation -> `skills/anthropic/pdf`
@@ -58,6 +59,7 @@ skills/
   - Consistent styling themes -> `skills/anthropic/theme-factory`
   - Generative algorithmic art (p5.js) -> `skills/anthropic/algorithmic-art`
   - Canvas graphics / poster generation -> `skills/anthropic/canvas-design`
+  - Anthropic brand styling & official visual guidelines -> `skills/anthropic/brand-guidelines`
 
 ### 2. Multi-Agent Orchestration & Personas
 - **The Governing Rule**: The user (or slash command) is the orchestrator. **Personas do not invoke other personas.** Skills are mandatory hops inside a persona's workflow.
@@ -123,5 +125,6 @@ When contributing or refactoring skills in this repository:
    node scripts/validate-reference-links.js
    node scripts/validate-versions.js
    python -m unittest scripts/test_ingestion_pipeline.py
+   python -m unittest scripts/test_hygiene.py
    ```
 5. Update both [`SKILLS_MAP.md`](SKILLS_MAP.md) and [`README.md`](README.md).

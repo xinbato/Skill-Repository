@@ -1,3 +1,10 @@
+#!/usr/bin/env python3
+# /// script
+# requires-python = ">=3.9"
+# dependencies = [
+#     "defusedxml",
+# ]
+# ///
 """Add comments to a DOCX document.
 
 Accepts either an unpacked directory OR a .docx/.dotx file directly.

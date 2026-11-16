@@ -40,3 +40,6 @@ jobs:
 
       - name: Run Manifest Version Sync Checker
         run: node scripts/validate-versions.js
+
+      - name: Run Repository Hygiene Test Suite
+        run: python -m unittest scripts/test_hygiene.py

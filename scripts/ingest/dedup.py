@@ -13,8 +13,9 @@ Evaluates candidate skills against the existing catalog to detect:
 
 import math
 import re
+import unicodedata
 from collections import Counter
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Dict, List, Optional, Set, Tuple
 
@@ -49,7 +50,7 @@ class OverlapReport:
     verdict: str  # "EXACT_NAME", "HIGH_OVERLAP", "PARTIAL_OVERLAP", "UNIQUE"
     closest_skill: Optional[str] = None
     similarity_score: float = 0.0
-    overlapping_terms: List[str] = None
+    overlapping_terms: List[str] = field(default_factory=list)
     recommendation: str = ""
 
     def to_markdown(self) -> str:
@@ -87,22 +88,25 @@ class OverlapReport:
 
 
 def tokenize(text: str) -> List[str]:
-    """Tokenize and filter text into informative stems/words."""
-    words = re.findall(r"[a-z0-9]+(?:-[a-z0-9]+)*", text.lower())
+    """Tokenize and filter text into informative words, normalizing unicode/accents."""
+    normalized = unicodedata.normalize("NFKD", text).encode("ascii", "ignore").decode("ascii")
+    words = re.findall(r"[a-z0-9]+(?:-[a-z0-9]+)*", normalized.lower())
     clean = []
     for w in words:
-        # Also split hyphenated terms into subterms
         subterms = w.split("-")
         for sub in subterms:
-            if len(sub) > 2 and sub not in STOPWORDS:
+            if len(sub) >= 2 and sub not in STOPWORDS:
                 clean.append(sub)
-        if len(w) > 2 and w not in STOPWORDS:
+        if len(w) >= 2 and w not in STOPWORDS and w not in subterms:
             clean.append(w)
     return clean
 
 
 def cosine_similarity(tokens1: List[str], tokens2: List[str]) -> Tuple[float, List[str]]:
     """Compute cosine similarity between two token bags and return common keywords."""
+    if not tokens1 or not tokens2:
+        return 0.0, []
+
     c1 = Counter(tokens1)
     c2 = Counter(tokens2)
     common_words = set(c1.keys()).intersection(set(c2.keys()))
@@ -115,8 +119,8 @@ def cosine_similarity(tokens1: List[str], tokens2: List[str]) -> Tuple[float, Li
     if mag1 == 0 or mag2 == 0:
         return 0.0, []
 
-    score = dot_product / (mag1 * mag2)
-    # Sort common words by their joint frequency
+    raw_score = dot_product / (mag1 * mag2)
+    score = max(0.0, min(1.0, raw_score))
     sorted_common = sorted(common_words, key=lambda w: c1[w] + c2[w], reverse=True)
     return round(score, 4), sorted_common
 
@@ -166,9 +170,13 @@ def check_candidate_overlap(
     existing_skills: List[ExistingSkill]
 ) -> OverlapReport:
     """Analyze whether the candidate skill duplicates or overlaps with existing skills."""
+    # Normalize candidate name for parity check
+    norm_cand_name = re.sub(r"[^a-z0-9]+", "-", candidate_name.lower().strip()).strip("-")
+
     # Check 1: Exact Name Match
     for existing in existing_skills:
-        if existing.name.lower() == candidate_name.lower():
+        norm_exist_name = re.sub(r"[^a-z0-9]+", "-", existing.name.lower().strip()).strip("-")
+        if norm_exist_name == norm_cand_name:
             return OverlapReport(
                 candidate_name=candidate_name,
                 verdict="EXACT_NAME",

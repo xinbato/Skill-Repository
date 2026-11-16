@@ -1,3 +1,10 @@
+#!/usr/bin/env python3
+# /// script
+# requires-python = ">=3.9"
+# dependencies = [
+#     "pdf2image",
+# ]
+# ///
 import os
 import sys
 
