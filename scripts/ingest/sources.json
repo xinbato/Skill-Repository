@@ -13,19 +13,9 @@
       "enabled": true
     },
     {
-      "id": "openai-skills",
-      "name": "OpenAI Agent Skills",
-      "repo": "openai/agent-skills",
-      "branch": "main",
-      "path": "skills",
-      "target_category": "openai",
-      "allowed_licenses": ["MIT", "Apache-2.0", "BSD-3-Clause", "ISC"],
-      "enabled": true
-    },
-    {
-      "id": "community-curated",
-      "name": "AgentSkills Open Standard Curated",
-      "repo": "agentskills/skills",
+      "id": "vercel-skills",
+      "name": "Vercel Labs Official Skills",
+      "repo": "vercel-labs/agent-skills",
       "branch": "main",
       "path": "skills",
       "target_category": "general",

@@ -2,8 +2,8 @@ name: Automated Skill Ingestion & Sync
 
 on:
   schedule:
-    # Run weekly on Monday at 00:00 UTC
-    - cron: '0 0 * * 1'
+    # Run twice a week: Monday and Thursday at 01:00 UTC (08:00 AM VN time)
+    - cron: '0 1 * * 1,4'
   workflow_dispatch:
     inputs:
       github_repo:
@@ -56,12 +56,18 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          python scripts/sync_skills.py \
-            --github-repo "${{ inputs.github_repo }}" \
-            --skill-path "${{ inputs.skill_path }}" \
-            --category "${{ inputs.category }}" \
-            ${{ inputs.dry_run && '--dry-run' || '' }} \
-            --output-pr-data pr_scorecard.md
+          if [ "${{ github.event_name }}" = "schedule" ]; then
+            echo "Running scheduled bi-weekly auto-sync (limit: 1 skill)..."
+            python scripts/sync_skills.py --auto-sync --limit 1 --output-pr-data pr_scorecard.md
+          else
+            echo "Running manual ingestion for ${{ inputs.skill_path }}..."
+            python scripts/sync_skills.py \
+              --github-repo "${{ inputs.github_repo }}" \
+              --skill-path "${{ inputs.skill_path }}" \
+              --category "${{ inputs.category }}" \
+              ${{ inputs.dry_run && '--dry-run' || '' }} \
+              --output-pr-data pr_scorecard.md
+          fi
 
       - name: Run Structural Repository Validators
         if: ${{ !inputs.dry_run && steps.sync.outputs.has_pr == 'true' }}
@@ -74,10 +80,10 @@ jobs:
         uses: peter-evans/create-pull-request@v6
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          commit-message: "feat(skills): ingest ${{ inputs.skill_path }} from ${{ inputs.github_repo }}"
-          branch: "sync/skill-${{ inputs.category }}-${{ github.run_id }}"
+          commit-message: "feat(skills): ingest ${{ steps.sync.outputs.skill_name || inputs.skill_path }}"
+          branch: "sync/skill-${{ steps.sync.outputs.skill_name || 'update' }}-${{ github.run_id }}"
           delete-branch: true
-          title: "🤖 [Skill Ingest] ${{ inputs.skill_path }} (via ${{ inputs.github_repo }})"
+          title: "🤖 [Skill Ingest] ${{ steps.sync.outputs.skill_name || inputs.skill_path }}"
           body-path: pr_scorecard.md
           labels: |
             skill-sync

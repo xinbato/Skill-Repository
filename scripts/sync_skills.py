@@ -406,6 +406,93 @@ def process_candidate_skill(
     )
 
 
+def auto_sync_sources(
+    sources_file: Path,
+    limit: int = 1,
+    dry_run: bool = False,
+    token: Optional[str] = None
+) -> List[IngestionResult]:
+    """Scan trusted_sources from sources.json, find un-ingested skills, and process up to limit."""
+    if not sources_file.exists():
+        print(f"[ERROR] Sources file not found: {sources_file}")
+        return []
+
+    with open(sources_file, "r", encoding="utf-8") as f:
+        config = json.load(f)
+
+    trusted = config.get("trusted_sources", [])
+    existing_skills = load_existing_skills(REPO_ROOT)
+    existing_names = {s.name.lower() for s in existing_skills}
+
+    accepted_results: List[IngestionResult] = []
+
+    for src in trusted:
+        if not src.get("enabled", True):
+            continue
+
+        repo = src.get("repo")
+        path = src.get("path", "skills")
+        branch = src.get("branch", "main")
+        category = src.get("target_category", "general")
+
+        print(f"\n[AUTO-SYNC] Đang quét nguồn: {repo} (nhánh: {branch}, path: {path})...")
+        try:
+            owner, repo_name = repo.split("/")
+        except ValueError:
+            print(f"[WARN] Cấu hình repo không hợp lệ: {repo}")
+            continue
+
+        url = f"https://api.github.com/repos/{owner}/{repo_name}/contents/{path}?ref={branch}"
+
+        try:
+            items = github_api_get(url, token)
+        except Exception as e:
+            print(f"[WARN] Không thể kết nối tới {repo}: {e}")
+            continue
+
+        if not isinstance(items, list):
+            continue
+
+        for item in items:
+            if item.get("type") != "dir":
+                continue
+
+            raw_skill_name = item.get("name")
+            sanitized_name = sanitize_skill_name(raw_skill_name)
+
+            # Skip if already exists in repo
+            if sanitized_name in existing_names:
+                continue
+
+            print(f"\n[PHÁT HIỆN SKILL MỚI] '{sanitized_name}' tại {repo}/{item.get('path')}")
+            with tempfile.TemporaryDirectory() as tmp_dir:
+                tmp_skill_dir = Path(tmp_dir) / sanitized_name
+                tmp_skill_dir.mkdir(parents=True, exist_ok=True)
+                download_success = download_github_folder(
+                    owner, repo_name, item.get("path"), tmp_skill_dir, token, ref=branch
+                )
+                if not download_success:
+                    print(f"[ERROR] Tải thất bại cho {sanitized_name}")
+                    continue
+
+                res = process_candidate_skill(
+                    candidate_dir=tmp_skill_dir,
+                    source_repo=f"{repo}/{item.get('path')}",
+                    target_category=category,
+                    dry_run=dry_run
+                )
+
+                if res.verdict == "ACCEPTED":
+                    print(f"-> Đã tiếp nhận thành công skill '{sanitized_name}'!")
+                    accepted_results.append(res)
+                    existing_names.add(sanitized_name)
+                    if len(accepted_results) >= limit:
+                        print(f"\n[AUTO-SYNC] Đã đạt giới hạn ({limit} skill/lần chạy). Dừng quét để mở PR.")
+                        return accepted_results
+
+    return accepted_results
+
+
 def main():
     parser = argparse.ArgumentParser(description="Skill Ingestion Pipeline CLI")
     parser.add_argument("--sources-file", default=str(SCRIPTS_DIR / "ingest" / "sources.json"), help="Path to sources.json")
@@ -415,6 +502,8 @@ def main():
     parser.add_argument("--output-pr-data", type=str, help="Path to write PR scorecard markdown / json")
     parser.add_argument("--github-repo", type=str, help="Ingest directly from GitHub repo (e.g. owner/repo)")
     parser.add_argument("--skill-path", type=str, help="Path inside GitHub repo to the skill")
+    parser.add_argument("--auto-sync", action="store_true", help="Automatically scan trusted sources from sources.json")
+    parser.add_argument("--limit", type=int, default=1, help="Max number of skills to ingest in auto-sync (default: 1)")
 
     args = parser.parse_args()
     token = os.environ.get("GITHUB_TOKEN")
@@ -497,18 +586,46 @@ def main():
 
             sys.exit(0)
 
-    # Mode 3: Sync from sources.json
+    # Mode 3: Auto-sync from sources.json
     sources_file = Path(args.sources_file)
-    if not sources_file.exists():
-        print(f"[ERROR] Sources file not found: {sources_file}")
-        sys.exit(1)
+    print(f"Bắt đầu quy trình Auto-Sync từ {sources_file.name} (Giới hạn: {args.limit} skill)...")
+    results = auto_sync_sources(
+        sources_file=sources_file,
+        limit=args.limit,
+        dry_run=args.dry_run,
+        token=token
+    )
 
-    with open(sources_file, "r", encoding="utf-8") as f:
-        config = json.load(f)
+    if results:
+        first = results[0]
+        if args.output_pr_data:
+            Path(args.output_pr_data).write_text(first.generate_pr_body(), encoding="utf-8")
+        if step_summary:
+            try:
+                with open(step_summary, "a", encoding="utf-8") as f:
+                    f.write("\n" + first.generate_pr_body() + "\n")
+            except Exception:
+                pass
+        if github_output:
+            try:
+                with open(github_output, "a", encoding="utf-8") as f:
+                    f.write(f"verdict={first.verdict}\n")
+                    f.write(f"skill_name={first.skill_name}\n")
+                    f.write(f"category={first.target_category}\n")
+                    f.write(f"has_pr={'true' if not args.dry_run else 'false'}\n")
+            except Exception:
+                pass
+    else:
+        print("\n[AUTO-SYNC] Đã quét toàn bộ nguồn. Không có kỹ năng mới nào cần nạp.")
+        if github_output:
+            try:
+                with open(github_output, "a", encoding="utf-8") as f:
+                    f.write("verdict=NO_NEW_SKILLS\n")
+                    f.write("has_pr=false\n")
+            except Exception:
+                pass
 
-    trusted = config.get("trusted_sources", [])
-    print(f"Đã nạp {len(trusted)} nguồn uy tín từ {sources_file.name}")
-    print("Gợi ý: Dùng --github-repo <owner/repo> --skill-path <path> để ingest một skill cụ thể.")
+    sys.exit(0)
 
 
 if __name__ == "__main__":
