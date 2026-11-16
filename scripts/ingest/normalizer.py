@@ -11,7 +11,7 @@ Enforces naming parity, valid frontmatter, PEP 723 headers, and creates default 
 import json
 import re
 from pathlib import Path
-from typing import Dict, List, Optional, Tuple
+from typing import Any, Dict, List, Optional, Tuple
 
 NAME_PATTERN = re.compile(r"^[a-z0-9]+(-[a-z0-9]+)*$")
 MAX_DESC_LENGTH = 1024
@@ -43,8 +43,8 @@ def sanitize_skill_name(raw_name: str) -> str:
     return cleaned[:64]
 
 
-def parse_frontmatter(content: str) -> Tuple[Dict[str, str], str]:
-    """Parse YAML frontmatter and return (dict, remaining_body)."""
+def parse_frontmatter(content: str) -> Tuple[Dict[str, Any], str]:
+    """Parse YAML frontmatter, capturing spec fields and nesting vendor keys into metadata."""
     if not content.startswith("---"):
         return {}, content
 
@@ -54,28 +54,65 @@ def parse_frontmatter(content: str) -> Tuple[Dict[str, str], str]:
 
     fm_raw = parts[1]
     body = parts[2]
-    data = {}
+    data: Dict[str, Any] = {}
+    metadata: Dict[str, str] = {}
+
     for line in fm_raw.splitlines():
-        line = line.strip()
-        if not line or line.startswith("#"):
+        stripped = line.strip()
+        if not stripped or stripped.startswith("#"):
             continue
-        if ":" in line:
-            k, v = line.split(":", 1)
+
+        # Indented key-value line -> belongs to metadata
+        if line.startswith("  ") or line.startswith("\t"):
+            if ":" in stripped:
+                k, v = stripped.split(":", 1)
+                metadata[k.strip()] = v.strip().strip('"').strip("'")
+            continue
+
+        # Column-0 key-value line
+        if ":" in stripped:
+            k, v = stripped.split(":", 1)
             k = k.strip()
             v = v.strip().strip('"').strip("'")
-            data[k] = v
+            if k == "metadata":
+                if v:
+                    metadata["info"] = v
+            elif k in {"name", "description", "license", "compatibility", "allowed-tools"}:
+                data[k] = v
+            else:
+                # Any non-spec top level key belongs under metadata
+                metadata[k] = v
 
+    if metadata:
+        data["metadata"] = metadata
     return data, body
 
 
-def format_frontmatter(data: Dict[str, str]) -> str:
-    """Format dictionary back into YAML frontmatter string."""
+def format_frontmatter(data: Dict[str, Any]) -> str:
+    """Format dictionary back into valid Agent Skills specification YAML frontmatter."""
     lines = ["---"]
-    for k, v in data.items():
-        if "\n" in v or '"' in v or ":" in v:
-            lines.append(f'{k}: "{v}"')
-        else:
-            lines.append(f"{k}: {v}")
+    # Write official spec keys first
+    for k in ["name", "description", "license", "compatibility", "allowed-tools"]:
+        if k in data and data[k]:
+            v = str(data[k]).strip()
+            if "\n" in v or '"' in v or ":" in v:
+                lines.append(f'{k}: "{v}"')
+            else:
+                lines.append(f"{k}: {v}")
+
+    # Write metadata block with 2-space indentation
+    meta = data.get("metadata")
+    if meta and isinstance(meta, dict):
+        lines.append("metadata:")
+        for mk, mv in meta.items():
+            val = str(mv).strip()
+            if '"' in val or ":" in val:
+                lines.append(f'  {mk}: "{val}"')
+            else:
+                lines.append(f"  {mk}: {val}")
+    elif meta and isinstance(meta, str) and meta.strip():
+        lines.append(f"metadata: {meta.strip()}")
+
     lines.append("---")
     return "\n".join(lines)
 
@@ -169,5 +206,33 @@ def normalize_skill_directory(
                     new_py_text = header + py_text
                 py_file.write_text(new_py_text, encoding="utf-8")
                 changes.append(f"Tự động thêm PEP 723 header vào scripts/{py_file.name}")
+
+    # 4. Enforce lowercase-hyphen-separated naming on supporting markdown files
+    replacements: Dict[str, str] = {}
+    for sub in skill_dir.iterdir():
+        if sub.is_dir() and sub.name not in ("evals", "__pycache__"):
+            for md_file in sub.glob("*.md"):
+                if "_" in md_file.name or any(c.isupper() for c in md_file.name):
+                    clean_name = md_file.name.lower().replace("_", "-")
+                    replacements[md_file.name] = clean_name
+                    target_file = sub / clean_name
+                    if target_file.exists():
+                        target_file.unlink()
+                    md_file.rename(target_file)
+                    changes.append(f"Đổi tên file sang kebab-case: {sub.name}/{md_file.name} -> {clean_name}")
+
+    if replacements:
+        for md_path in skill_dir.rglob("*.md"):
+            try:
+                md_text = md_path.read_text(encoding="utf-8", errors="replace")
+                modified = False
+                for old_name, new_name in replacements.items():
+                    if old_name in md_text:
+                        md_text = md_text.replace(old_name, new_name)
+                        modified = True
+                if modified:
+                    md_path.write_text(md_text, encoding="utf-8")
+            except Exception:
+                pass
 
     return True, changes
