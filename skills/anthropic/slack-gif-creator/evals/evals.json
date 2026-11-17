@@ -1,0 +1,21 @@
+{
+  "skill_name": "slack-gif-creator",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Tạo một ảnh GIF động 128x128 dạng emoji cho Slack hình một ngôi sao đang nhấp nháy phát sáng",
+      "expected_output": "Agent generates Python script using GIFBuilder and PIL to render frames and save optimized Slack emoji GIF.",
+      "assertions": [
+        "Uses GIFBuilder or PIL with Slack emoji constraints (128x128, optimized fps/colors)",
+        "Implements loop or easing animation frames",
+        "Produces valid animation code conforming to Slack size and duration limits"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Viết hàm đảo ngược mảng trong JavaScript",
+      "expected_output": "Agent provides JavaScript array reversal function without invoking slack-gif-creator",
+      "should_trigger": false
+    }
+  ]
+}

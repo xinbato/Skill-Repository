@@ -1,0 +1,21 @@
+{
+  "skill_name": "doc-coauthoring",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Tôi muốn viết một bản RFC kỹ thuật về kiến trúc microservices mới cho hệ thống thanh toán, hãy hướng dẫn tôi bắt đầu",
+      "expected_output": "Agent offers the structured 3-stage co-authoring workflow (Context Gathering, Refinement & Structure, Reader Testing) and asks initial clarifying questions.",
+      "assertions": [
+        "Offers structured co-authoring workflow stages",
+        "Asks meta-context questions regarding audience, impact, and constraints",
+        "Guides collaborative document creation iteratively"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Viết câu lệnh Git để cherry-pick commit abc1234",
+      "expected_output": "Agent provides the Git cherry-pick command without invoking doc-coauthoring workflow",
+      "should_trigger": false
+    }
+  ]
+}

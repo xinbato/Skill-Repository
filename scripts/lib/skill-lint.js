@@ -97,6 +97,18 @@ const SECTION_EXEMPT_SKILLS = {
   'algorithmic-art': 'Anthropic official skill',
   'brand-guidelines': 'Anthropic official skill',
   'canvas-design': 'Anthropic official skill',
+  'claude-api': 'Anthropic official skill',
+  'academy-guide': 'Anthropic official skill',
+  'discernment-nudge': 'Anthropic official skill',
+  'doc-coauthoring': 'Anthropic official skill',
+  'internal-comms': 'Anthropic official skill',
+  'skill-creator': 'Anthropic official skill',
+  'slack-gif-creator': 'Anthropic official skill',
+  'web-artifacts-builder': 'Anthropic official skill',
+  'composition-patterns': 'Vercel official skill — upstream format',
+  'gh-fix-ci': 'OpenAI official skill',
+  'plugin-creator': 'OpenAI official skill',
+  'render-deploy': 'OpenAI official skill',
   'playwright': 'OpenAI official skill',
   'security-threat-model': 'OpenAI official skill',
   'security-best-practices': 'OpenAI official skill',
@@ -486,19 +498,27 @@ function lintSkillContent(dirName, content, knownSkills, isCategoryExempt = fals
   // ── Context budget ───────────────────────────────────────────────────────
   // Counted as newlines so the number matches what `wc -l` reports, which is
   // how a contributor would check this by hand.
-  const lineCount = (content.match(/\n/g) || []).length;
-  if (lineCount > MAX_SKILL_LINES) {
-    warnings.push(
-      `SKILL.md is ${lineCount} lines, over the ${MAX_SKILL_LINES}-line context budget ` +
-      `(skill-anatomy.md: Context Efficiency) — move detail into a supporting file`,
-    );
+  // Skip for external/upstream skills: they are not authored in-repo.
+  if (!isCategoryExempt && !Object.hasOwn(SECTION_EXEMPT_SKILLS, dirName)) {
+    const lineCount = (content.match(/\n/g) || []).length;
+    if (lineCount > MAX_SKILL_LINES) {
+      warnings.push(
+        `SKILL.md is ${lineCount} lines, over the ${MAX_SKILL_LINES}-line context budget ` +
+        `(skill-anatomy.md: Context Efficiency) — move detail into a supporting file`,
+      );
+    }
   }
 
   // ── Cross-skill references ───────────────────────────────────────────────
-  const refs = extractSkillReferences(content);
-  for (const ref of refs) {
-    if (!knownSkills.has(ref)) {
-      warnings.push(`Dead cross-reference: \`${ref}\` is not a known skill`);
+  // Skip dead-ref check for external/upstream skills (exempt by category or
+  // allowlist): they may reference companion skills not yet in this repo.
+  const isExternalSkill = isCategoryExempt || Object.hasOwn(SECTION_EXEMPT_SKILLS, dirName);
+  if (!isExternalSkill) {
+    const refs = extractSkillReferences(content);
+    for (const ref of refs) {
+      if (!knownSkills.has(ref)) {
+        warnings.push(`Dead cross-reference: \`${ref}\` is not a known skill`);
+      }
     }
   }
 

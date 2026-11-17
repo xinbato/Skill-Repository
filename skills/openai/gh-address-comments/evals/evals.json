@@ -1,0 +1,20 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "skill_name": "gh-address-comments",
+  "description": "Evaluation test cases for gh-address-comments",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Activate and test basic usage of gh-address-comments",
+      "expected_outcome": "Skill executes instructions without error",
+      "assertions": [
+        {
+          "type": "contains_keywords",
+          "keywords": [
+            "gh-address-comments"
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "skill_name": "figma-create-design-system-rules",
+  "description": "Evaluation test cases for figma-create-design-system-rules",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Activate and test basic usage of figma-create-design-system-rules",
+      "expected_outcome": "Skill executes instructions without error",
+      "assertions": [
+        {
+          "type": "contains_keywords",
+          "keywords": [
+            "figma-create-design-system-rules"
+          ]
+        }
+      ]
+    }
+  ]
+}

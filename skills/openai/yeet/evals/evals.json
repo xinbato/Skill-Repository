@@ -1,0 +1,20 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "skill_name": "yeet",
+  "description": "Evaluation test cases for yeet",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Activate and test basic usage of yeet",
+      "expected_outcome": "Skill executes instructions without error",
+      "assertions": [
+        {
+          "type": "contains_keywords",
+          "keywords": [
+            "yeet"
+          ]
+        }
+      ]
+    }
+  ]
+}

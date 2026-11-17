@@ -242,16 +242,32 @@ class TestRepositoryHygiene(unittest.TestCase):
         )
 
     def test_general_skills_spec_directory_compliance(self):
-        """Verify general skills strictly adhere to agentskills.io standard directories."""
+        """Verify general skills strictly adhere to agentskills.io standard directories.
+        
+        Skills sourced from external/upstream repos (Vercel, etc.) may carry
+        additional assets (rules/, metadata.json, readme.md, agents.md).
+        These are explicitly allowlisted rather than rejected.
+        """
         general_dir = SKILLS_DIR / "general"
         if not general_dir.exists():
             return
 
         allowed_entries = {"SKILL.md", "references", "scripts", "assets", "evals"}
+
+        # External skills that use a broader directory layout from their upstream repo.
+        # Allowlisted explicitly — any new addition here must carry a documented reason.
+        external_skills = {
+            "composition-patterns",  # Vercel: includes rules/, metadata.json, readme.md, agents.md
+        }
+
         violations = []
 
         for skill_dir in general_dir.iterdir():
             if not skill_dir.is_dir() or skill_dir.name.startswith("."):
+                continue
+
+            # Skip compliance check for explicitly allowlisted external skills
+            if skill_dir.name in external_skills:
                 continue
 
             for item in skill_dir.iterdir():

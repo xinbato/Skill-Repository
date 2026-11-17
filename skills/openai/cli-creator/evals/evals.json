@@ -1,0 +1,20 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "skill_name": "cli-creator",
+  "description": "Evaluation test cases for cli-creator",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Activate and test basic usage of cli-creator",
+      "expected_outcome": "Skill executes instructions without error",
+      "assertions": [
+        {
+          "type": "contains_keywords",
+          "keywords": [
+            "cli-creator"
+          ]
+        }
+      ]
+    }
+  ]
+}

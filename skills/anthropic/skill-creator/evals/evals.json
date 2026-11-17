@@ -1,0 +1,21 @@
+{
+  "skill_name": "skill-creator",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Tôi muốn tạo một agent skill mới để phân tích log hệ thống Kubernetes và đánh giá hiệu quả của skill đó",
+      "expected_output": "Agent follows the skill creation workflow: captures intent, formulates triggering phrases, sets up eval cases, and guides iterative benchmarking.",
+      "assertions": [
+        "Interviews user for skill intent, trigger conditions, and expected output format",
+        "References eval set creation and iterative improvement loop",
+        "Adheres to agent skills directory and metadata standards"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Kiểm tra phiên bản nodejs đang cài đặt trên máy",
+      "expected_output": "Agent provides command to check node version without invoking skill-creator",
+      "should_trigger": false
+    }
+  ]
+}

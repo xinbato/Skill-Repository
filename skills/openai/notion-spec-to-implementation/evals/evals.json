@@ -1,0 +1,20 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "skill_name": "notion-spec-to-implementation",
+  "description": "Evaluation test cases for notion-spec-to-implementation",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Activate and test basic usage of notion-spec-to-implementation",
+      "expected_outcome": "Skill executes instructions without error",
+      "assertions": [
+        {
+          "type": "contains_keywords",
+          "keywords": [
+            "notion-spec-to-implementation"
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "skill_name": "figma-generate-design",
+  "description": "Evaluation test cases for figma-generate-design",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Activate and test basic usage of figma-generate-design",
+      "expected_outcome": "Skill executes instructions without error",
+      "assertions": [
+        {
+          "type": "contains_keywords",
+          "keywords": [
+            "figma-generate-design"
+          ]
+        }
+      ]
+    }
+  ]
+}

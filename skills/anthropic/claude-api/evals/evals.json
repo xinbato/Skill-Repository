@@ -1,0 +1,21 @@
+{
+  "skill_name": "claude-api",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Hướng dẫn tôi gọi API Claude 3.5 Sonnet bằng TypeScript SDK có tính năng prompt caching và streaming",
+      "expected_output": "Agent provides official Anthropic TypeScript SDK code demonstrating messages.create with stream: true and prompt caching block headers.",
+      "assertions": [
+        "Uses official @anthropic-ai/sdk package",
+        "Demonstrates streaming handling with messages.stream",
+        "Configures prompt caching cache_control block structure"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Tạo database migration cho PostgreSQL thêm bảng orders",
+      "expected_output": "Agent writes SQL database migration without invoking claude-api skill",
+      "should_trigger": false
+    }
+  ]
+}

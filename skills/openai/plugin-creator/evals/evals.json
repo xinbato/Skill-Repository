@@ -1,0 +1,20 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "skill_name": "plugin-creator",
+  "description": "Evaluation test cases for plugin-creator",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Activate and test basic usage of plugin-creator",
+      "expected_outcome": "Skill executes instructions without error",
+      "assertions": [
+        {
+          "type": "contains_keywords",
+          "keywords": [
+            "plugin-creator"
+          ]
+        }
+      ]
+    }
+  ]
+}

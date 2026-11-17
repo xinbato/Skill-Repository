@@ -281,7 +281,7 @@ def update_docs_catalog(skill_name: str, desc: str, category: str):
                     )
                     new_row = f"| **`{skill_name}`** | **{skill_name}**: {clean_desc} | {label} | [Fetch Raw]({raw_url}) |"
                     lines.insert(last_table_idx + 1, new_row)
-                    new_sec_body = "\n".join(lines)
+                    new_sec_body = "\n".join(lines).rstrip() + "\n\n"
                     if next_sec != -1:
                         content = content[:sec_start] + new_sec_body + content[next_sec:]
                     else:
@@ -325,7 +325,7 @@ def update_docs_catalog(skill_name: str, desc: str, category: str):
                     )
                     new_row = f"| **[`{skill_name}`](skills/{category}/{skill_name}/)** | {clean_desc} | {label} | [Explore](skills/{category}/{skill_name}/SKILL.md) |"
                     lines.insert(last_table_idx + 1, new_row)
-                    new_sec_body = "\n".join(lines)
+                    new_sec_body = "\n".join(lines).rstrip() + "\n\n"
                     if next_sec != -1:
                         content = content[:sec_start] + new_sec_body + content[next_sec:]
                     else:

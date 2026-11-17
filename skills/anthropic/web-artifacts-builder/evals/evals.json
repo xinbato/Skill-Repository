@@ -1,0 +1,21 @@
+{
+  "skill_name": "web-artifacts-builder",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Tôi cần tạo một web artifact phức tạp với React, Tailwind CSS và shadcn/ui gồm nhiều tab và state quản lý giỏ hàng",
+      "expected_output": "Agent outlines the multi-component web artifact build workflow using init-artifact.sh, React/shadcn component structure, and bundle-artifact.sh packaging.",
+      "assertions": [
+        "References init-artifact and bundle-artifact scripts",
+        "Adheres to React + Tailwind + shadcn/ui stack guidelines",
+        "Avoids generic AI aesthetic patterns (e.g., purple gradients, uniform rounded corners)"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Viết regex kiểm tra địa chỉ email hợp lệ",
+      "expected_output": "Agent provides email regex validation without invoking web-artifacts-builder",
+      "should_trigger": false
+    }
+  ]
+}

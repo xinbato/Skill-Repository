@@ -1,0 +1,20 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "skill_name": "migrate-to-codex",
+  "description": "Evaluation test cases for migrate-to-codex",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Activate and test basic usage of migrate-to-codex",
+      "expected_outcome": "Skill executes instructions without error",
+      "assertions": [
+        {
+          "type": "contains_keywords",
+          "keywords": [
+            "migrate-to-codex"
+          ]
+        }
+      ]
+    }
+  ]
+}

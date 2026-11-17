@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "description": "Evaluation test cases for academy-guide",
+  "evals": [
+    {
+      "id": "eval-smoke-test-1",
+      "prompt": "Activate and test basic usage of academy-guide",
+      "expected_outcome": "Skill executes instructions without error",
+      "assertions": [
+        {
+          "type": "contains_keywords",
+          "keywords": [
+            "academy-guide"
+          ]
+        }
+      ]
+    }
+  ]
+}

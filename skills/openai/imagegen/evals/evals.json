@@ -1,0 +1,20 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "skill_name": "imagegen",
+  "description": "Evaluation test cases for imagegen",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Activate and test basic usage of imagegen",
+      "expected_outcome": "Skill executes instructions without error",
+      "assertions": [
+        {
+          "type": "contains_keywords",
+          "keywords": [
+            "imagegen"
+          ]
+        }
+      ]
+    }
+  ]
+}

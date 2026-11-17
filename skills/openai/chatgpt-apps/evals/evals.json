@@ -1,0 +1,20 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "skill_name": "chatgpt-apps",
+  "description": "Evaluation test cases for chatgpt-apps",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Activate and test basic usage of chatgpt-apps",
+      "expected_outcome": "Skill executes instructions without error",
+      "assertions": [
+        {
+          "type": "contains_keywords",
+          "keywords": [
+            "chatgpt-apps"
+          ]
+        }
+      ]
+    }
+  ]
+}

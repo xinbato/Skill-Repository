@@ -1,0 +1,21 @@
+{
+  "skill_name": "internal-comms",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Soạn bản cập nhật tuần 3P (Progress, Plans, Problems) gửi cho ban lãnh đạo về tiến độ dự án di chuyển cơ sở dữ liệu",
+      "expected_output": "Agent uses internal comms 3P guidelines to draft structured Progress, Plans, and Problems sections tailored for leadership.",
+      "assertions": [
+        "Follows the 3P (Progress, Plans, Problems) framework format",
+        "Maintains professional, concise internal communication tone",
+        "Highlights key blockers and upcoming milestones clearly"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Giải thích thuật toán Dijkstra tìm đường đi ngắn nhất",
+      "expected_output": "Agent provides algorithmic explanation without triggering internal-comms",
+      "should_trigger": false
+    }
+  ]
+}

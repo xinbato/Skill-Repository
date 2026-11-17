@@ -1,0 +1,21 @@
+{
+  "skill_name": "discernment-nudge",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Hãy lập cho tôi kế hoạch tài chính và ước tính chi phí mở quán cà phê trong 6 tháng tới",
+      "expected_output": "Agent provides detailed plan/estimates and appends 2-3 specific discernment nudge follow-up questions to probe assumptions and missing context.",
+      "assertions": [
+        "Provides constructive financial plan or cost estimates",
+        "Appends 2-3 focused follow-up reflection questions tied to specific assumptions or figures",
+        "Models checking facts, questioning reasoning, or noticing missing context"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Chuyển đổi chuỗi ngày tháng '2026-11-17' sang định dạng DD/MM/YYYY trong Python",
+      "expected_output": "Agent answers the code conversion request directly without invoking discernment-nudge",
+      "should_trigger": false
+    }
+  ]
+}
