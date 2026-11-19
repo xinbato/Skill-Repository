@@ -1,0 +1,34 @@
+ecosystem:anthropic:
+  - changed-files:
+      - any-glob-to-any-file: 'skills/anthropic/**'
+
+ecosystem:openai:
+  - changed-files:
+      - any-glob-to-any-file: 'skills/openai/**'
+
+ecosystem:google:
+  - changed-files:
+      - any-glob-to-any-file: 'skills/google/**'
+
+ecosystem:general:
+  - changed-files:
+      - any-glob-to-any-file: 'skills/general/**'
+
+area:scripts:
+  - changed-files:
+      - any-glob-to-any-file: 'scripts/**'
+
+area:workflows:
+  - changed-files:
+      - any-glob-to-any-file: '.github/**'
+
+area:references:
+  - changed-files:
+      - any-glob-to-any-file: 'references/**'
+
+area:commands:
+  - changed-files:
+      - any-glob-to-any-file:
+          - 'commands/**'
+          - '.claude/commands/**'
+          - '.gemini/commands/**'

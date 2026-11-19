@@ -7,11 +7,14 @@ on:
     branches: [main]
   workflow_dispatch:
 
-jobs:
-  validate:
-    name: Validate Skills & Manifests
-    runs-on: ubuntu-latest
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
+jobs:
+  lint-skills-and-personas:
+    name: Lint Skills & Personas
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -32,6 +35,18 @@ jobs:
       - name: Run Skill Anatomy & Persona Linter
         run: node scripts/validate-skills.js
 
+  check-commands-and-links:
+    name: Check Commands & Reference Links
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
       - name: Run Slash Command Parity Checker
         run: node scripts/validate-commands.js
 
@@ -41,5 +56,68 @@ jobs:
       - name: Run Manifest Version Sync Checker
         run: node scripts/validate-versions.js
 
+      - name: Run Artifact Paths Checker
+        run: node scripts/validate-artifact-paths.js
+
+  unit-tests-and-hygiene:
+    name: Unit Tests & Hygiene
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Run Ingestion Pipeline Unit Tests
+        run: python -m unittest scripts/test_ingestion_pipeline.py
+
       - name: Run Repository Hygiene Test Suite
         run: python -m unittest scripts/test_hygiene.py
+
+      - name: Run Node Unit Tests
+        run: >
+          node --test
+          scripts/validate-artifact-paths-test.js
+          scripts/validate-commands-test.js
+          scripts/validate-reference-links-test.js
+          scripts/validate-versions-test.js
+          scripts/lib/skill-lint-test.js
+
+  ci-gate:
+    name: CI Gate (All Checks Pass)
+    runs-on: ubuntu-latest
+    needs:
+      - lint-skills-and-personas
+      - check-commands-and-links
+      - unit-tests-and-hygiene
+    if: always()
+    steps:
+      - name: Evaluate Results & Generate Step Summary
+        run: |
+          LINT_RESULT="${{ needs.lint-skills-and-personas.result }}"
+          COMMANDS_RESULT="${{ needs.check-commands-and-links.result }}"
+          TESTS_RESULT="${{ needs.unit-tests-and-hygiene.result }}"
+
+          echo "### 🛡️ CI Gate Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "| Check Job | Result |" >> $GITHUB_STEP_SUMMARY
+          echo "| :--- | :--- |" >> $GITHUB_STEP_SUMMARY
+          echo "| Lint Skills & Personas | ${LINT_RESULT} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Check Commands & Links | ${COMMANDS_RESULT} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Unit Tests & Hygiene | ${TESTS_RESULT} |" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          if [ "${LINT_RESULT}" != "success" ] || [ "${COMMANDS_RESULT}" != "success" ] || [ "${TESTS_RESULT}" != "success" ]; then
+            echo "❌ **CI Gate Failed**: One or more required check jobs failed or were cancelled." >> $GITHUB_STEP_SUMMARY
+            exit 1
+          else
+            echo "✅ **CI Gate Passed**: All validation checks, link verifications, and unit tests completed successfully." >> $GITHUB_STEP_SUMMARY
+          fi

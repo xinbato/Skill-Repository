@@ -2,21 +2,30 @@ name: Automated Skill Ingestion & Sync
 
 on:
   schedule:
-    # Run twice a week: Monday and Thursday at 01:00 UTC (08:00 AM VN time)
-    - cron: '0 1 * * 1,4'
+    # Run three times a week: Monday, Wednesday, and Friday at 01:00 UTC (08:00 AM VN time)
+    - cron: '0 1 * * 1,3,5'
   workflow_dispatch:
     inputs:
+      mode:
+        description: 'Sync execution mode (auto, ingest-only, update-only)'
+        required: true
+        type: choice
+        options:
+          - auto
+          - ingest-only
+          - update-only
+        default: 'auto'
       github_repo:
-        description: 'Upstream GitHub repo (owner/repo)'
-        required: true
-        default: 'anthropics/skills'
+        description: 'Upstream GitHub repo (owner/repo) [optional for manual ingest]'
+        required: false
+        default: ''
       skill_path:
-        description: 'Directory path to skill inside repo'
-        required: true
-        default: 'skills/brand-guidelines'
+        description: 'Directory path to skill inside repo [optional for manual ingest]'
+        required: false
+        default: ''
       category:
         description: 'Target ecosystem category'
-        required: true
+        required: false
         type: choice
         options:
           - general
@@ -32,6 +41,7 @@ on:
 permissions:
   contents: write
   pull-requests: write
+  issues: write
 
 jobs:
   ingest-and-verify:
@@ -41,6 +51,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.SYNC_BOT_PAT || secrets.GITHUB_TOKEN }}
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -54,33 +66,57 @@ jobs:
 
       - name: Run Ingestion Pipeline (4-Gate Verification)
         id: sync
+        continue-on-error: true
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.SYNC_BOT_PAT || secrets.GITHUB_TOKEN }}
         run: |
           if [ "${{ github.event_name }}" = "schedule" ]; then
             echo "Running scheduled bi-weekly auto-sync (limit: 1 skill)..."
-            python scripts/sync_skills.py --auto-sync --limit 1 --output-pr-data pr_scorecard.md
-          else
-            echo "Running manual ingestion for ${{ inputs.skill_path }}..."
+            python scripts/sync_skills.py --auto-sync --mode auto --limit 1 --output-pr-data pr_scorecard.md
+          elif [ -n "${{ inputs.github_repo }}" ] && [ -n "${{ inputs.skill_path }}" ]; then
+            echo "Running manual ingestion for ${{ inputs.skill_path }} from ${{ inputs.github_repo }}..."
             python scripts/sync_skills.py \
               --github-repo "${{ inputs.github_repo }}" \
               --skill-path "${{ inputs.skill_path }}" \
               --category "${{ inputs.category }}" \
               ${{ inputs.dry_run && '--dry-run' || '' }} \
               --output-pr-data pr_scorecard.md
+          else
+            echo "Running auto-sync with mode: ${{ inputs.mode }}..."
+            python scripts/sync_skills.py \
+              --auto-sync \
+              --mode "${{ inputs.mode }}" \
+              ${{ inputs.dry_run && '--dry-run' || '' }} \
+              --output-pr-data pr_scorecard.md
           fi
 
-      - name: Run Structural Repository Validators
+      - name: Create Security Alert Issue
+        if: ${{ steps.sync.outputs.verdict == 'REJECTED_SECURITY' }}
+        env:
+          GH_TOKEN: ${{ secrets.SYNC_BOT_PAT || secrets.GITHUB_TOKEN }}
+        run: |
+          gh issue create \
+            --title "🚨 [Security Alert] Skill Ingestion Blocked: ${{ steps.sync.outputs.skill_name || inputs.skill_path || 'Unknown' }}" \
+            --body "The automated ingestion pipeline blocked a skill candidate due to security violations. Please review the run logs and step summary for detailed findings." \
+            --label "security,automated-alert"
+
+      - name: Run Full Repository Validators
         if: ${{ steps.sync.outputs.has_pr == 'true' }}
         run: |
           python scripts/validate_skills.py
           node scripts/validate-skills.js
+          node scripts/validate-commands.js
+          node scripts/validate-reference-links.js
+          node scripts/validate-versions.js
+          node scripts/validate-artifact-paths.js
+          python -m unittest scripts/test_hygiene.py
 
       - name: Create Pull Request with Scorecard
+        id: cpr
         if: ${{ steps.sync.outputs.has_pr == 'true' }}
         uses: peter-evans/create-pull-request@v6
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.SYNC_BOT_PAT || secrets.GITHUB_TOKEN }}
           commit-message: "feat(skills): ingest ${{ steps.sync.outputs.skill_name || inputs.skill_path }}"
           branch: "sync/skill-${{ steps.sync.outputs.skill_name || 'update' }}-${{ github.run_id }}"
           delete-branch: true
@@ -90,3 +126,11 @@ jobs:
             skill-sync
             automated-ingest
             needs-review
+
+      - name: Enable Auto-Merge on PR
+        if: ${{ steps.cpr.outputs.pull-request-url != '' }}
+        env:
+          GH_TOKEN: ${{ secrets.SYNC_BOT_PAT || secrets.GITHUB_TOKEN }}
+          PR_URL: ${{ steps.cpr.outputs.pull-request-url }}
+        run: |
+          gh pr merge "$PR_URL" --auto --squash --delete-branch

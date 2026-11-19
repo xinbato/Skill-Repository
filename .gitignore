@@ -94,3 +94,6 @@ SKILL_COMPARISON.md
 # Ephemeral CI / Ingestion Artifacts
 pr_scorecard.md
 pr_scorecard*.md
+
+# Tracked sync state
+!.sync-state.json
