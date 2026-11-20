@@ -127,6 +127,7 @@ Official enterprise cloud infrastructure, Gemini API, BigQuery, and developer pl
 | :--- | :--- | :--- | :--- |
 | **`gemini-api`** | **gemini-api**: Use when the user asks about using Gemini in an enterprise environment or explicitly mentions Vertex AI, Google Cloud, or Agent Platform. Guides the usage of the Gemini API on Agent Platform with the Google Gen AI SDK... | Google Ecosystem | [Fetch Raw](https://raw.githubusercontent.com/xinbato/Skill-Repository/main/skills/google/gemini-api/SKILL.md) |
 | **`agent-platform-access-audit`** | **agent-platform-access-audit**: Audits AI agent data access, blast radius, and blocked policy operations in Google Cloud by querying Cloud Audit Logs via BigQuery. Use when investigating what resources or services an agent accessed, identifying top ... | Google Ecosystem | [Fetch Raw](https://raw.githubusercontent.com/xinbato/Skill-Repository/main/skills/google/agent-platform-access-audit/SKILL.md) |
+| **`agent-platform-alert-configuration`** | **agent-platform-alert-configuration**: Configures best-practice alerting policies for AI agents using OpenTelemetry (OTel) metrics, generating output as Terraform (.tf) configuration files. Use when analyzing, writing, or deploying alerting policies to mon... | Google Ecosystem | [Fetch Raw](https://raw.githubusercontent.com/xinbato/Skill-Repository/main/skills/google/agent-platform-alert-configuration/SKILL.md) |
 
 ---
 
