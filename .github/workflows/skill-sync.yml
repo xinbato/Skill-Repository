@@ -51,7 +51,6 @@ jobs:
     steps:
       - name: Generate GitHub App Token (xinbato-skill)
         id: app-token
-        if: ${{ secrets.APP_ID != '' && secrets.APP_PRIVATE_KEY != '' }}
         uses: actions/create-github-app-token@v1
         with:
           app-id: ${{ secrets.APP_ID }}
