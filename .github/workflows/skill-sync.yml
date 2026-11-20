@@ -49,7 +49,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Generate GitHub App Token (xinbato-skill-bot)
+      - name: Generate GitHub App Token (xinbato-skill)
         id: app-token
         if: ${{ secrets.APP_ID != '' && secrets.APP_PRIVATE_KEY != '' }}
         uses: actions/create-github-app-token@v1
@@ -129,8 +129,8 @@ jobs:
           SKILL_NAME: ${{ steps.sync.outputs.skill_name }}
           ACTION_TYPE: ${{ steps.sync.outputs.action }}
         run: |
-          BOT_NAME="${{ steps.app-token.outputs.app-slug || 'xinbato-skill-bot' }}[bot]"
-          BOT_EMAIL="${{ steps.app-token.outputs.app-slug || 'xinbato-skill-bot' }}[bot]@users.noreply.github.com"
+          BOT_NAME="${{ steps.app-token.outputs.app-slug || 'xinbato-skill' }}[bot]"
+          BOT_EMAIL="${{ steps.app-token.outputs.app-slug || 'xinbato-skill' }}[bot]@users.noreply.github.com"
           git config user.name "$BOT_NAME"
           git config user.email "$BOT_EMAIL"
 
