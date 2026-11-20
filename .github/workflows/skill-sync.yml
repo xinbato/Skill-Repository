@@ -49,17 +49,10 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Generate GitHub App Token (xinbato-skill)
-        id: app-token
-        uses: actions/create-github-app-token@v1
-        with:
-          app-id: ${{ secrets.APP_ID }}
-          private-key: ${{ secrets.APP_PRIVATE_KEY }}
-
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          token: ${{ steps.app-token.outputs.token || secrets.SYNC_BOT_PAT || secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.SYNC_BOT_PAT || secrets.GITHUB_TOKEN }}
           fetch-depth: 0
 
       - name: Set up Python
@@ -75,7 +68,7 @@ jobs:
       - name: Run Ingestion & Security Verification
         id: sync
         env:
-          GITHUB_TOKEN: ${{ steps.app-token.outputs.token || secrets.SYNC_BOT_PAT || secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.SYNC_BOT_PAT || secrets.GITHUB_TOKEN }}
           EVENT_NAME: ${{ github.event_name }}
           INPUT_MODE: ${{ inputs.mode || 'auto' }}
           INPUT_REPO: ${{ inputs.github_repo || '' }}
@@ -111,7 +104,7 @@ jobs:
       - name: Create Security Alert Issue
         if: steps.sync.outputs.verdict == 'REJECTED_SECURITY'
         env:
-          GH_TOKEN: ${{ steps.app-token.outputs.token || secrets.SYNC_BOT_PAT || secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.SYNC_BOT_PAT || secrets.GITHUB_TOKEN }}
           SKILL_NAME: ${{ steps.sync.outputs.skill_name }}
           INPUT_PATH: ${{ inputs.skill_path }}
         run: |
@@ -124,14 +117,12 @@ jobs:
       - name: Push Branch and Auto-Merge PR
         if: steps.sync.outputs.has_pr == 'true'
         env:
-          GH_TOKEN: ${{ steps.app-token.outputs.token || secrets.SYNC_BOT_PAT || secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.SYNC_BOT_PAT || secrets.GITHUB_TOKEN }}
           SKILL_NAME: ${{ steps.sync.outputs.skill_name }}
           ACTION_TYPE: ${{ steps.sync.outputs.action }}
         run: |
-          BOT_NAME="${{ steps.app-token.outputs.app-slug || 'xinbato-skill' }}"
-          BOT_EMAIL="${{ steps.app-token.outputs.app-slug || 'xinbato-skill' }}@users.noreply.github.com"
-          git config user.name "$BOT_NAME"
-          git config user.email "$BOT_EMAIL"
+          git config user.name "xinbato"
+          git config user.email "duongdat.20061103@gmail.com"
 
           BRANCH="sync/skill-${SKILL_NAME:-update}-${{ github.run_id }}"
           git checkout -b "$BRANCH"
