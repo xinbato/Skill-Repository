@@ -758,6 +758,8 @@ def auto_sync_sources(
             if not isinstance(items, list):
                 continue
 
+            source_attempts = 0
+            MAX_ATTEMPTS_PER_SOURCE = 3
             for item in items:
                 if item.get("type") != "dir":
                     continue
@@ -767,6 +769,11 @@ def auto_sync_sources(
 
                 if not sanitized_name or sanitized_name in existing_names:
                     continue
+
+                source_attempts += 1
+                if source_attempts > MAX_ATTEMPTS_PER_SOURCE:
+                    print(f"-> [AUTO-SYNC] Đã thử {MAX_ATTEMPTS_PER_SOURCE} kỹ năng từ nguồn {repo} nhưng chưa đạt chuẩn. Chuyển sang nguồn kế tiếp.")
+                    break
 
                 print(f"\n[PHÁT HIỆN SKILL MỚI] '{sanitized_name}' tại {repo}/{item.get('path')}")
                 with tempfile.TemporaryDirectory() as tmp_dir:
