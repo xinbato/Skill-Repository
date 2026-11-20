@@ -126,6 +126,7 @@ Official enterprise cloud infrastructure, Gemini API, BigQuery, and developer pl
 | Skill Name | Description & Trigger Keywords | Category | Direct Raw URL |
 | :--- | :--- | :--- | :--- |
 | **`gemini-api`** | **gemini-api**: Use when the user asks about using Gemini in an enterprise environment or explicitly mentions Vertex AI, Google Cloud, or Agent Platform. Guides the usage of the Gemini API on Agent Platform with the Google Gen AI SDK... | Google Ecosystem | [Fetch Raw](https://raw.githubusercontent.com/xinbato/Skill-Repository/main/skills/google/gemini-api/SKILL.md) |
+| **`agent-platform-access-audit`** | **agent-platform-access-audit**: Audits AI agent data access, blast radius, and blocked policy operations in Google Cloud by querying Cloud Audit Logs via BigQuery. Use when investigating what resources or services an agent accessed, identifying top ... | Google Ecosystem | [Fetch Raw](https://raw.githubusercontent.com/xinbato/Skill-Repository/main/skills/google/agent-platform-access-audit/SKILL.md) |
 
 ---
 
@@ -169,6 +170,7 @@ Pre-packaged lifecycle commands that activate skills automatically:
 ## Dynamic Fetch Commands
 
 When you need to pull a skill into the current workspace, run any of the following commands:
+
 ### Option 1: Universal Python One-Liner (Cross-Platform)
 ```bash
 python -c "import urllib.request, os; group='general'; name='interview-me'; os.makedirs(f'.agents/skills/{name}', exist_ok=True); urllib.request.urlretrieve(f'https://raw.githubusercontent.com/xinbato/Skill-Repository/main/skills/{group}/{name}/SKILL.md', f'.agents/skills/{name}/SKILL.md'); print(f'Installed {name}')"

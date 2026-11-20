@@ -221,10 +221,12 @@ Pre-configured slash commands for the development lifecycle:
 | Skill | Description | Category | Link |
 | :--- | :--- | :--- | :--- |
 | **[`gemini-api`](skills/google/gemini-api/)** | Use when the user asks about using Gemini in an enterprise environment or explicitly mentions Vertex AI, Google Cloud, or Agent Platform. Guides th... | Google Ecosystem | [Explore](skills/google/gemini-api/SKILL.md) |
+| **[`agent-platform-access-audit`](skills/google/agent-platform-access-audit/)** | Audits AI agent data access, blast radius, and blocked policy operations in Google Cloud by querying Cloud Audit Logs via BigQuery. Use when invest... | Google Ecosystem | [Explore](skills/google/agent-platform-access-audit/SKILL.md) |
 
 ---
 
 ## How to Use
+
 ### Method 1: The Portable Map Mode (Recommended)
 In any project workspace:
 1. Download [`SKILLS_MAP.md`](SKILLS_MAP.md) into your project root.

@@ -1,5 +1,16 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "version": "1.0.0",
-  "tracked_skills": {}
+  "tracked_skills": {
+    "agent-platform-access-audit": {
+      "skill_name": "agent-platform-access-audit",
+      "category": "google",
+      "source_repo": "google/skills",
+      "source_path": "skills/cloud/agent-platform-access-audit",
+      "branch": "main",
+      "content_sha": "e876bd6a04c2cf32ec4dc9840b855e76097801adb227a74cfed26744d6b2cdc3",
+      "commit_sha": "",
+      "last_sync": "2026-11-20T07:11:49.751230+00:00"
+    }
+  }
 }
