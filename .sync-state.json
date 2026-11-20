@@ -11,6 +11,16 @@
       "content_sha": "e876bd6a04c2cf32ec4dc9840b855e76097801adb227a74cfed26744d6b2cdc3",
       "commit_sha": "",
       "last_sync": "2026-11-20T07:11:49.751230+00:00"
+    },
+    "agent-platform-alert-configuration": {
+      "skill_name": "agent-platform-alert-configuration",
+      "category": "google",
+      "source_repo": "google/skills",
+      "source_path": "skills/cloud/agent-platform-alert-configuration",
+      "branch": "main",
+      "content_sha": "c28f71de7761667a70bb402a1fd6b2e1af12a680fb0aa4d9ce7cfbcd2b618fd3",
+      "commit_sha": "",
+      "last_sync": "2026-11-20T07:55:46.031164+00:00"
     }
   }
 }
