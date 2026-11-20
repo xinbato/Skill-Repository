@@ -21,6 +21,16 @@
       "content_sha": "c28f71de7761667a70bb402a1fd6b2e1af12a680fb0aa4d9ce7cfbcd2b618fd3",
       "commit_sha": "",
       "last_sync": "2026-11-20T07:55:46.031164+00:00"
+    },
+    "agent-platform-autorater-customization": {
+      "skill_name": "agent-platform-autorater-customization",
+      "category": "google",
+      "source_repo": "google/skills",
+      "source_path": "skills/cloud/agent-platform-autorater-customization",
+      "branch": "main",
+      "content_sha": "4f4ae5aa3249002bc1e57a36ebe7475759a33be9ef1dfcd3507bd5e115afd0b8",
+      "commit_sha": "",
+      "last_sync": "2026-11-20T08:03:24.415963+00:00"
     }
   }
 }
