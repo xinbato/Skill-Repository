@@ -13,22 +13,22 @@
       "enabled": true
     },
     {
-      "id": "vercel-skills",
-      "name": "Vercel Labs Official Skills",
-      "repo": "vercel-labs/agent-skills",
+      "id": "openai-curated-skills",
+      "name": "OpenAI Curated Skills",
+      "repo": "openai/skills",
       "branch": "main",
-      "path": "skills",
-      "target_category": "general",
+      "path": "skills/.curated",
+      "target_category": "openai",
       "allowed_licenses": ["MIT", "Apache-2.0"],
       "enabled": true
     },
     {
-      "id": "garden-skills",
-      "name": "Garden Skills (ConardLi)",
-      "repo": "ConardLi/garden-skills",
+      "id": "openai-system-skills",
+      "name": "OpenAI System Skills",
+      "repo": "openai/skills",
       "branch": "main",
-      "path": "skills",
-      "target_category": "general",
+      "path": "skills/.system",
+      "target_category": "openai",
       "allowed_licenses": ["MIT", "Apache-2.0"],
       "enabled": true
     },
@@ -51,6 +51,26 @@
       "target_category": "google",
       "allowed_licenses": ["Apache-2.0", "MIT"],
       "enabled": true
+    },
+    {
+      "id": "vercel-skills",
+      "name": "Vercel Labs Official Skills",
+      "repo": "vercel-labs/agent-skills",
+      "branch": "main",
+      "path": "skills",
+      "target_category": "general",
+      "allowed_licenses": ["MIT", "Apache-2.0"],
+      "enabled": false
+    },
+    {
+      "id": "garden-skills",
+      "name": "Garden Skills (ConardLi)",
+      "repo": "ConardLi/garden-skills",
+      "branch": "main",
+      "path": "skills",
+      "target_category": "general",
+      "allowed_licenses": ["MIT", "Apache-2.0"],
+      "enabled": false
     }
   ]
 }
