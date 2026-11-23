@@ -224,6 +224,7 @@ Pre-configured slash commands for the development lifecycle:
 | **[`agent-platform-access-audit`](skills/google/agent-platform-access-audit/)** | Audits AI agent data access, blast radius, and blocked policy operations in Google Cloud by querying Cloud Audit Logs via BigQuery. Use when invest... | Google Ecosystem | [Explore](skills/google/agent-platform-access-audit/SKILL.md) |
 | **[`agent-platform-alert-configuration`](skills/google/agent-platform-alert-configuration/)** | Configures best-practice alerting policies for AI agents using OpenTelemetry (OTel) metrics, generating output as Terraform (.tf) configuration fil... | Google Ecosystem | [Explore](skills/google/agent-platform-alert-configuration/SKILL.md) |
 | **[`agent-platform-autorater-customization`](skills/google/agent-platform-autorater-customization/)** | Customizes an autorater (evaluation metric) for an AI agent so its grades match the user's own judgment, starting from the agent's real trajectorie... | Google Ecosystem | [Explore](skills/google/agent-platform-autorater-customization/SKILL.md) |
+| **[`agent-platform-deploy`](skills/google/agent-platform-deploy/)** | Deploy open models or custom weights from Model Garden to Agent Platform endpoints, check the status of an in-progress deployment operation, or cle... | Google Ecosystem | [Explore](skills/google/agent-platform-deploy/SKILL.md) |
 
 ---
 

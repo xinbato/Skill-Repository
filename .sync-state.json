@@ -31,6 +31,16 @@
       "content_sha": "4f4ae5aa3249002bc1e57a36ebe7475759a33be9ef1dfcd3507bd5e115afd0b8",
       "commit_sha": "",
       "last_sync": "2026-11-20T08:03:24.415963+00:00"
+    },
+    "agent-platform-deploy": {
+      "skill_name": "agent-platform-deploy",
+      "category": "google",
+      "source_repo": "google/skills",
+      "source_path": "skills/cloud/agent-platform-deploy",
+      "branch": "main",
+      "content_sha": "1ecb6f6390afce6355aabacb69ea13652e065c3f690bc0c68d64ad4555d1d325",
+      "commit_sha": "",
+      "last_sync": "2026-11-23T08:45:20.126835+00:00"
     }
   }
 }
