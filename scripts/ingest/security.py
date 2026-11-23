@@ -69,22 +69,22 @@ class SecurityReport:
 
     def to_markdown(self) -> str:
         if not self.is_safe:
-            items = "\n".join(f"- 🔴 **Critical**: {err}" for err in self.critical_errors)
-            warns = "\n".join(f"- ⚠️ **Warning**: {w}" for w in self.warnings)
+            items = "\n".join(f"- [CRITICAL]: {err}" for err in self.critical_errors)
+            warns = "\n".join(f"- [WARNING]: {w}" for w in self.warnings)
             return (
-                f"### 🛡️ Báo cáo Bảo mật: ❌ KHÔNG AN TOÀN (FAILED)\n"
+                f"### Bao cao Bao mat: KHONG AN TOAN (FAILED)\n"
                 f"{items}\n"
                 f"{warns if warns else ''}"
             )
         elif self.warnings:
-            warns = "\n".join(f"- ⚠️ **Warning**: {w}" for w in self.warnings)
+            warns = "\n".join(f"- [WARNING]: {w}" for w in self.warnings)
             return (
-                f"### 🛡️ Báo cáo Bảo mật: ⚠️ CẢNH BÁO (PASSED WITH WARNINGS)\n"
+                f"### Bao cao Bao mat: CANH BAO (PASSED WITH WARNINGS)\n"
                 f"{warns}"
             )
         else:
             return (
-                f"### 🛡️ Báo cáo Bảo mật: ✅ AN TOÀN (PASSED)\n"
+                f"### Bao cao Bao mat: AN TOAN (PASSED)\n"
                 f"- Không phát hiện mã độc, lệnh nguy hiểm hoặc dấu hiệu prompt injection ẩn."
             )
 

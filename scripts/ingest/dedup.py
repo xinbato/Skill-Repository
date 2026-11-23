@@ -56,7 +56,7 @@ class OverlapReport:
     def to_markdown(self) -> str:
         if self.verdict == "EXACT_NAME":
             return (
-                f"### 🛑 Trùng lặp danh tính (Exact Match)\n"
+                f"### [Xung dot] Trung lap danh tinh (Exact Match)\n"
                 f"- **Tên skill**: `{self.candidate_name}`\n"
                 f"- **Xung đột**: Đã tồn tại trong `{self.closest_skill}`\n"
                 f"- **Khuyến nghị**: {self.recommendation}"

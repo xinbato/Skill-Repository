@@ -333,6 +333,7 @@ description: Testing links. Use when testing.
 See [Manual](references/User_Manual.md#section-1?v=2)
 See [Percent Encoded](references/User%20Manual.md?raw=true#intro)
 See [Other](references/SuperUser_Manual.md)
+load_skill_resource(skill_name='link-test', file_path='references/User_Manual.md')
 Prose mentioning User_Manual.md directly.
 """, encoding="utf-8")
 
@@ -344,6 +345,7 @@ Prose mentioning User_Manual.md directly.
             self.assertIn("[Manual](references/user-manual.md#section-1?v=2)", updated_md)
             self.assertIn("[Percent Encoded](references/user-manual.md?raw=true#intro)", updated_md)
             self.assertIn("[Other](references/SuperUser_Manual.md)", updated_md)
+            self.assertIn("file_path='references/user-manual.md'", updated_md)
             self.assertIn("Prose mentioning User_Manual.md directly.", updated_md)
 
     # =========================================================================

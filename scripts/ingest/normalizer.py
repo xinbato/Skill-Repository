@@ -308,6 +308,19 @@ def replace_links_in_markdown(md_text: str, replacements: Dict[str, str]) -> str
         # HTML links: <a href="target">
         md_text = re.sub(r'(<a\s+[^>]*href=["\'])([^"\']+)(["\'])', repl_url, md_text)
 
+        # Path references in code/prose: references/old_name.md or ../../references/old_name.md
+        def repl_path_ref(match):
+            prefix = match.group(1)
+            tail = match.group(3) or ""
+            return f"{prefix}{new_name}{tail}"
+
+        md_text = re.sub(
+            r"((?:\.\.\/)*references\/)(" + escaped_variants + r")([?#][^\s\'\"\)\`\]]*)?(?=[^\w-]|$)",
+            repl_path_ref,
+            md_text,
+            flags=re.IGNORECASE
+        )
+
     return md_text
 
 

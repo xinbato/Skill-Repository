@@ -69,11 +69,11 @@ class IngestionResult:
 
     def generate_pr_body(self) -> str:
         """Generate GitHub PR body with comprehensive Scorecard for ingest or update."""
-        status_badge = "✅ SẴN SÀNG DUYỆT" if self.verdict == "ACCEPTED" else f"⚠️ CẦN LƯU Ý ({self.verdict})"
+        status_badge = "SAN SANG DUYET" if self.verdict == "ACCEPTED" else f"CAN LUU Y ({self.verdict})"
 
         if self.action == "update":
             md = [
-                f"## 🔄 Báo cáo Tự động Cập nhật Skill (Drift Update): `{self.skill_name}`",
+                f"## Bao cao Tu dong Cap nhat Skill (Drift Update): `{self.skill_name}`",
                 "",
                 f"| Thông tin | Chi tiết |",
                 f"| :--- | :--- |",
@@ -110,9 +110,9 @@ class IngestionResult:
                 "---",
                 "",
                 "### 3. Kiểm tra Cấu trúc & Linter (Quality Gate)",
-                f"- Chuẩn hóa cấu trúc: {'✅ Đạt chuẩn' if self.validation_passed else '❌ Có lỗi'}",
+                f"- Chuẩn hóa cấu trúc: {'Dat chuan' if self.validation_passed else 'Co loi'}",
                 "",
-                "### 📌 Hướng dẫn Review cho Maintainer:",
+                "### Huong dan Review cho Maintainer:",
                 f"- [ ] Xem diff nội dung cập nhật tại `skills/{self.target_category}/{self.skill_name}/`.",
                 "- [ ] Kiểm tra các file script nếu có trong `scripts/`.",
                 "- [ ] Nhấn **Merge pull request** để đồng bộ phiên bản mới nhất từ thượng nguồn.",
@@ -122,7 +122,7 @@ class IngestionResult:
 
         # Ingest Action
         md = [
-            f"## 🤖 Báo cáo Tự động Đồng bộ Skill: `{self.skill_name}`",
+            f"## Bao cao Tu dong Dong bo Skill: `{self.skill_name}`",
             "",
             f"| Thông tin | Chi tiết |",
             f"| :--- | :--- |",
@@ -159,9 +159,9 @@ class IngestionResult:
             "---",
             "",
             "### 3. Kiểm tra Cấu trúc & Linter (Quality Gate)",
-            f"- Chuẩn hóa cấu trúc: {'✅ Đạt chuẩn' if self.validation_passed else '❌ Có lỗi'}",
+            f"- Chuẩn hóa cấu trúc: {'Dat chuan' if self.validation_passed else 'Co loi'}",
             "",
-            "### 📌 Hướng dẫn Review cho Maintainer:",
+            "### Huong dan Review cho Maintainer:",
             "- [ ] Xem diff nội dung hướng dẫn tại `SKILL.md`.",
             "- [ ] Kiểm tra các file script nếu có trong `scripts/`.",
             "- [ ] Nhấn **Merge pull request** nếu kỹ năng hữu ích và an toàn.",
@@ -199,7 +199,7 @@ def emit_no_skills_summary():
     if step_summary:
         try:
             with open(step_summary, "a", encoding="utf-8") as f:
-                f.write("\n### 🤖 Auto-Sync Skill Ingestion & Update\n- Không phát hiện skill mới cần nạp hoặc cập nhật từ các nguồn tin cậy.\n")
+                f.write("\n### Auto-Sync Skill Ingestion & Update\n- Không phát hiện skill mới cần nạp hoặc cập nhật từ các nguồn tin cậy.\n")
         except Exception as e:
             print(f"[WARN] Failed to write step summary: {e}")
 

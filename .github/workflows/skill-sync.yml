@@ -110,7 +110,7 @@ jobs:
         run: |
           TARGET="${SKILL_NAME:-$INPUT_PATH}"
           gh issue create \
-            --title "🚨 [Security Alert] Skill Ingestion Blocked: ${TARGET:-Unknown}" \
+            --title "[Security Alert] Skill Ingestion Blocked: ${TARGET:-Unknown}" \
             --body "The automated ingestion pipeline blocked a skill candidate due to security violations. Please review the run logs and step summary for detailed findings." \
             --label "security,automated-alert"
 
@@ -137,7 +137,7 @@ jobs:
           git commit -m "$COMMIT_MSG"
           git push origin "$BRANCH"
 
-          PR_TITLE="🤖 [Skill Ingest] ${SKILL_NAME}"
+          PR_TITLE="feat(skills): ${ACTION_TYPE:-ingest} ${SKILL_NAME}"
           PR_URL=$(gh pr create \
             --title "$PR_TITLE" \
             --body-file pr_scorecard.md \

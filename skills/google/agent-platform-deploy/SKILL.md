@@ -166,7 +166,7 @@ gcloud ai model-garden models list-deployment-config \
 > For active first-party Gemini or LoRA deploys, you must verify region
 > availability before proceeding. Load the full instructions with
 > `load_skill_resource(skill_name='agent-platform-deploy',
-> file_path='references/region_availability.md')`.
+> file_path='references/region-availability.md')`.
 >
 > **Skip this** for open-weights models (Gemma, Llama, DeepSeek, Qwen) and for
 > Gemini-tuned models — they have no per-region publisher endpoint restriction.
@@ -338,7 +338,7 @@ bare `<OP_ID>` works only when gcloud has a project.
 
 > For the detailed tuned model copy and deployment workflow, load
 > `load_skill_resource(skill_name='agent-platform-deploy',
-> file_path='references/copy_deploy_guide.md')`. That guide covers the execution
+> file_path='references/copy-deploy-guide.md')`. That guide covers the execution
 > sequence, tier assignments for copy/deploy/delete commands, hardware
 > renegotiation, test prediction verification, and the in-progress operation
 > lock.
@@ -419,7 +419,7 @@ curl -X POST \
 > For the full undeploy and cleanup procedure (find endpoint, undeploy model,
 > delete endpoint, delete model), load
 > `load_skill_resource(skill_name='agent-platform-deploy',
-> file_path='references/undeploy_guide.md')`.
+> file_path='references/undeploy-guide.md')`.
 
 > [!WARNING] Failing to undeploy a model will result in continuous charges for
 > the allocated compute resources, even if you are not sending prediction

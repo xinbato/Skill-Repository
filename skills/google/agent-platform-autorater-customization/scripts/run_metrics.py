@@ -12,7 +12,7 @@ Inputs:
                   such as trajectory).
   --metrics_file  Python file defining METRICS = {"name": callable}; each
                   callable returns an SDK metric (see
-                  references/metric_templates.md).
+                  references/metric-templates.md).
   --metrics       Comma-separated names from METRICS to run.
   --rubrics       Optional JSON {"<case id>": [rubric, ...]}, for example the
                   user's existing rubrics; attached as
