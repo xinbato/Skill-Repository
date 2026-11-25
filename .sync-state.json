@@ -41,6 +41,16 @@
       "content_sha": "1ecb6f6390afce6355aabacb69ea13652e065c3f690bc0c68d64ad4555d1d325",
       "commit_sha": "",
       "last_sync": "2026-11-23T08:45:20.126835+00:00"
+    },
+    "agent-platform-endpoint-management": {
+      "skill_name": "agent-platform-endpoint-management",
+      "category": "google",
+      "source_repo": "google/skills",
+      "source_path": "skills/cloud/agent-platform-endpoint-management",
+      "branch": "main",
+      "content_sha": "1df9274b66a1ca787a168cfb07d6693526ed25e82bd685f0047b0dbe02a6ec50",
+      "commit_sha": "",
+      "last_sync": "2026-11-25T09:41:12.138500+00:00"
     }
   }
 }
