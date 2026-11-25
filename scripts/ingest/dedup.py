@@ -19,6 +19,11 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Dict, List, Optional, Set, Tuple
 
+try:
+    from .normalizer import parse_frontmatter
+except ImportError:
+    from normalizer import parse_frontmatter
+
 STOPWORDS: Set[str] = {
     "a", "about", "above", "after", "again", "against", "all", "am", "an", "and", "any", "are",
     "as", "at", "be", "because", "been", "before", "being", "below", "between", "both", "but",
@@ -64,7 +69,7 @@ class OverlapReport:
         elif self.verdict == "HIGH_OVERLAP":
             terms = ", ".join(f"`{t}`" for t in (self.overlapping_terms or [])[:8])
             return (
-                f"### ⚠️ Cảnh báo trùng lặp công năng cao ({int(self.similarity_score * 100)}%)\n"
+                f"### [WARN] Cảnh báo trùng lặp công năng cao ({int(self.similarity_score * 100)}%)\n"
                 f"- **Skill ứng viên**: `{self.candidate_name}`\n"
                 f"- **Trùng với skill hiện có**: `{self.closest_skill}`\n"
                 f"- **Từ khóa tương đồng**: {terms}\n"
@@ -73,7 +78,7 @@ class OverlapReport:
         elif self.verdict == "PARTIAL_OVERLAP":
             terms = ", ".join(f"`{t}`" for t in (self.overlapping_terms or [])[:6])
             return (
-                f"### ℹ️ Trùng một phần / Giải pháp thay thế ({int(self.similarity_score * 100)}%)\n"
+                f"### [INFO] Trùng một phần / Giải pháp thay thế ({int(self.similarity_score * 100)}%)\n"
                 f"- **Skill ứng viên**: `{self.candidate_name}`\n"
                 f"- **Giao thoa với**: `{self.closest_skill}`\n"
                 f"- **Từ khóa chung**: {terms}\n"
@@ -81,7 +86,7 @@ class OverlapReport:
             )
         else:
             return (
-                f"### ✅ Độc nhất / Tính năng mới ({int(self.similarity_score * 100)}% match)\n"
+                f"### [PASS] Độc nhất / Tính năng mới ({int(self.similarity_score * 100)}% match)\n"
                 f"- **Skill ứng viên**: `{self.candidate_name}`\n"
                 f"- **Khuyến nghị**: {self.recommendation}"
             )
@@ -143,11 +148,8 @@ def load_existing_skills(repo_root: Path) -> List[ExistingSkill]:
                 continue
 
             content = skill_md.read_text(encoding="utf-8", errors="replace")
-            desc = ""
-            for line in content.splitlines()[:25]:
-                if line.strip().startswith("description:"):
-                    desc = line.split(":", 1)[1].strip().strip('"').strip("'")
-                    break
+            fm, _ = parse_frontmatter(content)
+            desc = str(fm.get("description", "")).strip()
 
             combined_text = f"{skill_dir.name} {desc} {content[:1000]}"
             tokens = tokenize(combined_text)

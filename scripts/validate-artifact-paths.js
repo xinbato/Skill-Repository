@@ -60,8 +60,8 @@ const GUARDED_FILES = [
   'commands/planning.toml',
   'commands/build.toml',
   // Skills the commands invoke
-  'skills/spec-driven-development/SKILL.md',
-  'skills/planning-and-task-breakdown/SKILL.md',
+  'skills/general/spec-driven-development/SKILL.md',
+  'skills/general/planning-and-task-breakdown/SKILL.md',
   // Docs that tell users where the artifacts live
   'docs/getting-started.md',
   'docs/adoption-guide.md',

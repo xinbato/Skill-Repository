@@ -48,7 +48,6 @@ from ingest.drift import (
     load_sync_state,
     register_skill,
     save_sync_state,
-    scan_all_drifts,
 )
 from ingest.normalizer import NAME_PATTERN, normalize_skill_directory, parse_frontmatter, sanitize_skill_name
 from ingest.security import SecurityReport, scan_skill_directory
@@ -251,102 +250,90 @@ def run_local_validation() -> bool:
             print(f"[FAIL] validate-skills.js failed:\n{node_res.stdout}\n{node_res.stderr}")
             return False
 
+        links_res = subprocess.run(
+            ["node", str(SCRIPTS_DIR / "validate-reference-links.js")],
+            cwd=str(REPO_ROOT),
+            capture_output=True,
+            text=True
+        )
+        if links_res.returncode != 0:
+            print(f"[FAIL] validate-reference-links.js failed:\n{links_res.stdout}\n{links_res.stderr}")
+            return False
+
         return True
     except Exception as e:
         print(f"[WARN] Error running validation script: {e}")
         return False
 
 
+def _insert_catalog_row(doc_path: Path, marker: str, header: str, new_row: str) -> None:
+    """Insert a table row at the end of a markdown section table if marker is absent."""
+    if not doc_path.exists() or not header:
+        return
+    content = doc_path.read_text(encoding="utf-8")
+    if marker in content or header not in content:
+        return
+
+    sec_start = content.find(header)
+    next_sec = content.find("### ", sec_start + len(header))
+    if next_sec == -1:
+        next_sec = content.find("---", sec_start + len(header))
+
+    sec_body = content[sec_start:next_sec] if next_sec != -1 else content[sec_start:]
+    lines = sec_body.splitlines()
+    last_table_idx = max(
+        (i for i, line in enumerate(lines) if line.strip().startswith("|") and line.strip().endswith("|")),
+        default=-1,
+    )
+    if last_table_idx == -1:
+        return
+
+    lines.insert(last_table_idx + 1, new_row)
+    new_sec_body = "\n".join(lines).rstrip() + "\n\n"
+    updated = (
+        content[:sec_start] + new_sec_body + content[next_sec:]
+        if next_sec != -1
+        else content[:sec_start] + new_sec_body
+    )
+    doc_path.write_text(updated, encoding="utf-8")
+    print(f"-> Đã tự động cập nhật {doc_path.name} cho '{marker}'")
+
+
 def update_docs_catalog(skill_name: str, desc: str, category: str):
     """Register ingested skill into SKILLS_MAP.md and README.md."""
-    # 1. Update SKILLS_MAP.md
-    skills_map_path = REPO_ROOT / "SKILLS_MAP.md"
-    if skills_map_path.exists():
-        content = skills_map_path.read_text(encoding="utf-8")
-        if f"**`{skill_name}`**" not in content:
-            section_headers = {
-                "general": "### 1. General & Engineering Lifecycle Skills",
-                "anthropic": "### 2. Anthropic Ecosystem Skills",
-                "openai": "### 3. OpenAI Ecosystem Skills",
-                "google": "### 4. Google Ecosystem Skills",
-            }
-            header = section_headers.get(category)
-            if header and header in content:
-                sec_start = content.find(header)
-                next_sec = content.find("### ", sec_start + len(header))
-                if next_sec == -1:
-                    next_sec = content.find("---", sec_start + len(header))
+    label = {
+        "google": "Google Ecosystem",
+        "anthropic": "Anthropic Ecosystem",
+        "openai": "OpenAI Ecosystem",
+    }.get(category, "General")
+    clean_desc = desc.replace("\n", " ").strip()
 
-                sec_body = content[sec_start:next_sec] if next_sec != -1 else content[sec_start:]
-                lines = sec_body.splitlines()
-                last_table_idx = -1
-                for i, line in enumerate(lines):
-                    if line.strip().startswith("|") and line.strip().endswith("|"):
-                        last_table_idx = i
+    map_desc = clean_desc[:217] + "..." if len(clean_desc) > 220 else clean_desc
+    raw_url = f"https://raw.githubusercontent.com/xinbato/Skill-Repository/main/skills/{category}/{skill_name}/SKILL.md"
+    _insert_catalog_row(
+        REPO_ROOT / "SKILLS_MAP.md",
+        f"**`{skill_name}`**",
+        {
+            "general": "### 1. General & Engineering Lifecycle Skills",
+            "anthropic": "### 2. Anthropic Ecosystem Skills",
+            "openai": "### 3. OpenAI Ecosystem Skills",
+            "google": "### 4. Google Ecosystem Skills",
+        }.get(category, ""),
+        f"| **`{skill_name}`** | **{skill_name}**: {map_desc} | {label} | [Fetch Raw]({raw_url}) |",
+    )
 
-                if last_table_idx != -1:
-                    clean_desc = desc.replace("\n", " ").strip()
-                    if len(clean_desc) > 220:
-                        clean_desc = clean_desc[:217] + "..."
-                    raw_url = f"https://raw.githubusercontent.com/xinbato/Skill-Repository/main/skills/{category}/{skill_name}/SKILL.md"
-                    label = (
-                        "Google Ecosystem" if category == "google" else
-                        "Anthropic Ecosystem" if category == "anthropic" else
-                        "OpenAI Ecosystem" if category == "openai" else "General"
-                    )
-                    new_row = f"| **`{skill_name}`** | **{skill_name}**: {clean_desc} | {label} | [Fetch Raw]({raw_url}) |"
-                    lines.insert(last_table_idx + 1, new_row)
-                    new_sec_body = "\n".join(lines).rstrip() + "\n\n"
-                    if next_sec != -1:
-                        content = content[:sec_start] + new_sec_body + content[next_sec:]
-                    else:
-                        content = content[:sec_start] + new_sec_body
-                    skills_map_path.write_text(content, encoding="utf-8")
-                    print(f"-> Đã tự động cập nhật SKILLS_MAP.md cho '{skill_name}'")
-
-    # 2. Update README.md
-    readme_path = REPO_ROOT / "README.md"
-    if readme_path.exists():
-        content = readme_path.read_text(encoding="utf-8")
-        if f"[`{skill_name}`]" not in content:
-            section_headers = {
-                "general": "### General & Engineering Lifecycle",
-                "anthropic": "### Anthropic Ecosystem",
-                "openai": "### OpenAI Ecosystem",
-                "google": "### Google Ecosystem",
-            }
-            header = section_headers.get(category)
-            if header and header in content:
-                sec_start = content.find(header)
-                next_sec = content.find("### ", sec_start + len(header))
-                if next_sec == -1:
-                    next_sec = content.find("---", sec_start + len(header))
-
-                sec_body = content[sec_start:next_sec] if next_sec != -1 else content[sec_start:]
-                lines = sec_body.splitlines()
-                last_table_idx = -1
-                for i, line in enumerate(lines):
-                    if line.strip().startswith("|") and line.strip().endswith("|"):
-                        last_table_idx = i
-
-                if last_table_idx != -1:
-                    clean_desc = desc.replace("\n", " ").strip()
-                    if len(clean_desc) > 150:
-                        clean_desc = clean_desc[:147] + "..."
-                    label = (
-                        "Google Ecosystem" if category == "google" else
-                        "Anthropic Ecosystem" if category == "anthropic" else
-                        "OpenAI Ecosystem" if category == "openai" else "General"
-                    )
-                    new_row = f"| **[`{skill_name}`](skills/{category}/{skill_name}/)** | {clean_desc} | {label} | [Explore](skills/{category}/{skill_name}/SKILL.md) |"
-                    lines.insert(last_table_idx + 1, new_row)
-                    new_sec_body = "\n".join(lines).rstrip() + "\n\n"
-                    if next_sec != -1:
-                        content = content[:sec_start] + new_sec_body + content[next_sec:]
-                    else:
-                        content = content[:sec_start] + new_sec_body
-                    readme_path.write_text(content, encoding="utf-8")
-                    print(f"-> Đã tự động cập nhật README.md cho '{skill_name}'")
+    readme_desc = clean_desc[:147] + "..." if len(clean_desc) > 150 else clean_desc
+    _insert_catalog_row(
+        REPO_ROOT / "README.md",
+        f"[`{skill_name}`]",
+        {
+            "general": "### General & Engineering Lifecycle",
+            "anthropic": "### Anthropic Ecosystem",
+            "openai": "### OpenAI Ecosystem",
+            "google": "### Google Ecosystem",
+        }.get(category, ""),
+        f"| **[`{skill_name}`](skills/{category}/{skill_name}/)** | {readme_desc} | {label} | [Explore](skills/{category}/{skill_name}/SKILL.md) |",
+    )
 
 
 def process_candidate_skill(
@@ -499,28 +486,44 @@ def process_candidate_skill(
             details="Kiểm tra hoàn tất (Dry-run)."
         )
 
-    # Copy to destination
+    # Backup existing state so failed validation leaves repo clean
     dest_category_dir.mkdir(parents=True, exist_ok=True)
-    if dest_skill_dir.exists():
-        shutil.rmtree(dest_skill_dir)
-    shutil.copytree(candidate_dir, dest_skill_dir)
-    print(f"-> Đã chuyển skill vào: {dest_skill_dir}")
+    with tempfile.TemporaryDirectory() as backup_root:
+        backup_skill_dir = Path(backup_root) / "skill_backup"
+        had_existing = dest_skill_dir.exists()
+        if had_existing:
+            shutil.copytree(dest_skill_dir, backup_skill_dir)
+            shutil.rmtree(dest_skill_dir)
 
-    # Auto-register into SKILLS_MAP.md and README.md
-    update_docs_catalog(skill_name, desc, target_category)
+        skills_map_path = REPO_ROOT / "SKILLS_MAP.md"
+        readme_path = REPO_ROOT / "README.md"
+        orig_map = skills_map_path.read_text(encoding="utf-8") if skills_map_path.exists() else None
+        orig_readme = readme_path.read_text(encoding="utf-8") if readme_path.exists() else None
 
-    # Run global repo validation
-    print("-> Chạy bộ validator tổng thể của repository...")
-    val_passed = run_local_validation()
+        shutil.copytree(candidate_dir, dest_skill_dir)
+        print(f"-> Đã chuyển skill vào: {dest_skill_dir}")
 
-    if val_passed:
-        # Register ingested skill into .sync-state.json
-        register_skill(
-            skill_name=skill_name,
-            category=target_category,
-            source_repo=source_repo,
-            local_dir=dest_skill_dir,
-        )
+        update_docs_catalog(skill_name, desc, target_category)
+
+        print("-> Chạy bộ validator tổng thể của repository...")
+        val_passed = run_local_validation()
+
+        if val_passed:
+            register_skill(
+                skill_name=skill_name,
+                category=target_category,
+                source_repo=source_repo,
+                local_dir=dest_skill_dir,
+            )
+        else:
+            if dest_skill_dir.exists():
+                shutil.rmtree(dest_skill_dir)
+            if had_existing:
+                shutil.copytree(backup_skill_dir, dest_skill_dir)
+            if orig_map is not None:
+                skills_map_path.write_text(orig_map, encoding="utf-8")
+            if orig_readme is not None:
+                readme_path.write_text(orig_readme, encoding="utf-8")
 
     return IngestionResult(
         skill_name=skill_name,
@@ -663,26 +666,35 @@ def process_update_skill(
             details="Kiểm tra cập nhật hoàn tất (Dry-run)."
         )
 
-    # Safe directory overwrite
+    # Safe directory overwrite with rollback on validation failure
     dest_category_dir.mkdir(parents=True, exist_ok=True)
-    if dest_skill_dir.exists():
-        shutil.rmtree(dest_skill_dir)
-    shutil.copytree(candidate_dir, dest_skill_dir)
-    print(f"-> Đã ghi đè cập nhật vào: {dest_skill_dir}")
+    with tempfile.TemporaryDirectory() as backup_root:
+        backup_skill_dir = Path(backup_root) / "skill_backup"
+        had_existing = dest_skill_dir.exists()
+        if had_existing:
+            shutil.copytree(dest_skill_dir, backup_skill_dir)
+            shutil.rmtree(dest_skill_dir)
 
-    # Register updated skill into .sync-state.json
-    register_skill(
-        skill_name=skill_name,
-        category=target_category,
-        source_repo=source_repo,
-        source_path=source_path,
-        branch=branch,
-        local_dir=dest_skill_dir,
-    )
+        shutil.copytree(candidate_dir, dest_skill_dir)
+        print(f"-> Đã ghi đè cập nhật vào: {dest_skill_dir}")
 
-    # Run global repo validation
-    print("-> Chạy bộ validator tổng thể của repository sau cập nhật...")
-    val_passed = run_local_validation()
+        print("-> Chạy bộ validator tổng thể của repository sau cập nhật...")
+        val_passed = run_local_validation()
+
+        if val_passed:
+            register_skill(
+                skill_name=skill_name,
+                category=target_category,
+                source_repo=source_repo,
+                source_path=source_path,
+                branch=branch,
+                local_dir=dest_skill_dir,
+            )
+        else:
+            if dest_skill_dir.exists():
+                shutil.rmtree(dest_skill_dir)
+            if had_existing:
+                shutil.copytree(backup_skill_dir, dest_skill_dir)
 
     return IngestionResult(
         skill_name=skill_name,
@@ -986,7 +998,11 @@ def main():
 
     # Mode 2: Ingest directly from a specific GitHub repo path
     if args.github_repo and args.skill_path:
-        owner, repo = args.github_repo.split("/")
+        repo_parts = [p for p in args.github_repo.strip("/").split("/") if p]
+        if len(repo_parts) != 2:
+            print(f"[ERROR] Invalid --github-repo format '{args.github_repo}'. Expected 'owner/repo'.")
+            sys.exit(1)
+        owner, repo = repo_parts
         skill_name = Path(args.skill_path).name
         with tempfile.TemporaryDirectory() as tmp_dir:
             tmp_skill_dir = Path(tmp_dir) / skill_name
@@ -1024,7 +1040,18 @@ def main():
     if results:
         first = results[0]
         emit_github_outputs(first, args.dry_run)
-        if args.output_pr_data:
+        if len(results) > 1:
+            combined_body = "\n\n---\n\n".join(r.generate_pr_body() for r in results)
+            step_summary = os.environ.get("GITHUB_STEP_SUMMARY")
+            if step_summary:
+                try:
+                    with open(step_summary, "a", encoding="utf-8") as f:
+                        f.write("\n" + combined_body + "\n")
+                except Exception as e:
+                    print(f"[WARN] Failed to write combined step summary: {e}")
+            if args.output_pr_data:
+                Path(args.output_pr_data).write_text(combined_body, encoding="utf-8")
+        elif args.output_pr_data:
             Path(args.output_pr_data).write_text(first.generate_pr_body(), encoding="utf-8")
     else:
         print("\n[AUTO-SYNC] Đã quét toàn bộ nguồn. Không có kỹ năng nào cần nạp hoặc cập nhật.")

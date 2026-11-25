@@ -233,6 +233,9 @@ def _format_yaml_key_val(key: str, val: Any, indent: int = 0) -> List[str]:
         return res
 
     v_str = str(val).strip()
+    if key == "description" and "\n" in v_str:
+        # Keep description single-line so strict host/JS parsers stay compatible
+        v_str = " ".join(line.strip() for line in v_str.splitlines() if line.strip())
     if "\n" in v_str:
         res = [f"{sp}{key}: |"]
         for line in v_str.splitlines():

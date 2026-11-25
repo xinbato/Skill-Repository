@@ -16,6 +16,9 @@ import subprocess
 import sys
 from pathlib import Path
 
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from ingest.normalizer import parse_frontmatter as _parse_frontmatter_full
+
 ROOT_DIR = Path(__file__).resolve().parent.parent
 SKILLS_DIR = ROOT_DIR / "skills"
 AGENTS_DIR = ROOT_DIR / "agents"
@@ -132,23 +135,8 @@ def validate_hygiene() -> tuple[list[str], list[str], int]:
 
 def parse_frontmatter(content: str) -> dict:
     """Extract frontmatter key-value pairs from markdown content."""
-    if not content.startswith("---"):
-        return {}
-    parts = content.split("---", 2)
-    if len(parts) < 3:
-        return {}
-    fm_text = parts[1]
-    res = {}
-    for line in fm_text.splitlines():
-        line = line.strip()
-        if not line or line.startswith("#"):
-            continue
-        if ":" in line:
-            k, v = line.split(":", 1)
-            k = k.strip()
-            v = v.strip().strip('"').strip("'")
-            res[k] = v
-    return res
+    fm, _ = _parse_frontmatter_full(content)
+    return fm
 
 
 def validate_skills() -> int:

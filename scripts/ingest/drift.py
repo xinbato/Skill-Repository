@@ -43,7 +43,7 @@ class DriftReport:
 
     def to_markdown(self) -> str:
         """Format drift result for markdown reporting in PR scorecard."""
-        badge = "⚠️ PHÁT HIỆN BIẾN ĐỘNG (DRIFT)" if self.has_drift else "✅ ĐÃ ĐỒNG BỘ"
+        badge = "[WARN] PHÁT HIỆN BIẾN ĐỘNG (DRIFT)" if self.has_drift else "[PASS] ĐÃ ĐỒNG BỘ"
         lines = [
             f"- **Trạng thái biến động**: {badge}",
             f"- **SHA Cục bộ (Local SHA)**: `{self.local_sha[:12] if self.local_sha else 'Chưa có'}`",
@@ -109,6 +109,8 @@ def download_github_folder(
         item_type = item.get("type")
         item_path = item.get("path")
         item_name = item.get("name")
+        if not item_name or "/" in item_name or "\\" in item_name or item_name in (".", ".."):
+            continue
 
         if item_type == "file":
             download_url = item.get("download_url")
@@ -118,7 +120,8 @@ def download_github_folder(
         elif item_type == "dir":
             sub_dir = target_dir / item_name
             sub_dir.mkdir(parents=True, exist_ok=True)
-            download_github_folder(owner, repo, item_path, sub_dir, token, ref)
+            if not download_github_folder(owner, repo, item_path, sub_dir, token, ref):
+                return False
 
     return True
 

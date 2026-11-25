@@ -193,11 +193,11 @@ function main() {
   if (errors > 0) {
     if (errors > anchorErrors) {
       console.log('\nLinks to references/ are resolved from the directory of the file that contains them.');
-      console.log('Shared checklists live in the repo-root references/, two levels up from a SKILL.md:');
-      console.log('use `../../references/<file>.md`, not `references/<file>.md`.');
+      console.log('Shared checklists live in the repo-root references/, three levels up from a SKILL.md:');
+      console.log('use `../../../references/<file>.md`, not `references/<file>.md`.');
       if (referenceFileErrors > 0) {
-        console.log('From a file inside skills/<name>/references/ they are three levels up:');
-        console.log('use `../../../references/<file>.md`.');
+        console.log('From a file inside skills/<category>/<skill>/references/ they are four levels up:');
+        console.log('use `../../../../references/<file>.md`.');
       }
     }
     if (anchorErrors > 0) {

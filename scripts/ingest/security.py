@@ -247,32 +247,43 @@ def scan_skill_directory(skill_dir: Path) -> SecurityReport:
     else:
         report.critical_errors.append("Không tìm thấy file SKILL.md")
 
-    # 2. Scan references/
+    # 2. Scan references/ (recursive)
     ref_dir = skill_dir / "references"
     if ref_dir.exists() and ref_dir.is_dir():
-        for md_file in ref_dir.glob("*.md"):
+        for md_file in ref_dir.rglob("*.md"):
+            rel = md_file.relative_to(skill_dir).as_posix()
             content = md_file.read_text(encoding="utf-8", errors="replace")
-            crits, warns = scan_markdown_content(content, f"references/{md_file.name}")
+            crits, warns = scan_markdown_content(content, rel)
             report.critical_errors.extend(crits)
             report.warnings.extend(warns)
 
-    # 3. Scan scripts/
+    # 3. Scan scripts/ (recursive)
     scripts_dir = skill_dir / "scripts"
     if scripts_dir.exists() and scripts_dir.is_dir():
-        for py_file in scripts_dir.glob("*.py"):
+        for py_file in scripts_dir.rglob("*.py"):
             crits, warns = scan_python_script(py_file)
             report.critical_errors.extend(crits)
             report.warnings.extend(warns)
 
-        for sh_file in scripts_dir.glob("*.sh"):
+        for sh_file in scripts_dir.rglob("*.sh"):
+            rel = sh_file.relative_to(skill_dir).as_posix()
             content = sh_file.read_text(encoding="utf-8", errors="replace")
             if re.search(r"(?:curl|wget)\s+[^\n|;]+?\|\s*(?:sudo\s+)?(?:/bin/)?(?:bash|sh)", content, re.I):
-                report.critical_errors.append(f"scripts/{sh_file.name}: Phát hiện pattern nguy hiểm 'curl/wget | bash'")
+                report.critical_errors.append(f"{rel}: Phát hiện pattern nguy hiểm 'curl/wget | bash'")
 
-        for win_script in list(scripts_dir.glob("*.ps1")) + list(scripts_dir.glob("*.bat")) + list(scripts_dir.glob("*.cmd")):
+        for win_script in list(scripts_dir.rglob("*.ps1")) + list(scripts_dir.rglob("*.bat")) + list(scripts_dir.rglob("*.cmd")):
+            rel = win_script.relative_to(skill_dir).as_posix()
             content = win_script.read_text(encoding="utf-8", errors="replace")
             if re.search(r"(?:iex|Invoke-Expression)[^\n]*?(?:DownloadString|DownloadFile|WebRequest|WebClient|curl|iwr)", content, re.I):
-                report.critical_errors.append(f"scripts/{win_script.name}: Phát hiện pattern nguy hiểm tải và thực thi mã từ xa")
+                report.critical_errors.append(f"{rel}: Phát hiện pattern nguy hiểm tải và thực thi mã từ xa")
+
+        for js_file in list(scripts_dir.rglob("*.js")) + list(scripts_dir.rglob("*.mjs")) + list(scripts_dir.rglob("*.ts")):
+            rel = js_file.relative_to(skill_dir).as_posix()
+            content = js_file.read_text(encoding="utf-8", errors="replace")
+            if re.search(r"\b(?:eval|Function)\s*\(", content):
+                report.critical_errors.append(f"{rel}: Phát hiện hàm thực thi mã động nguy hiểm (eval/Function)")
+            if re.search(r"child_process|execSync\s*\(|exec\s*\(", content):
+                report.warnings.append(f"{rel}: Phát hiện lệnh gọi tiến trình con (child_process/exec)")
 
     if report.critical_errors:
         report.is_safe = False

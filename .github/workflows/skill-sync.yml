@@ -146,5 +146,5 @@ jobs:
             --label "skill-sync,automated-ingest")
 
           echo "Created PR: $PR_URL"
-          echo "Merging PR into main..."
-          gh pr merge "$PR_URL" --squash --delete-branch || gh pr merge "$PR_URL" --auto --squash --delete-branch
+          echo "Enabling auto-merge (or merging) into main..."
+          gh pr merge "$PR_URL" --auto --squash --delete-branch || gh pr merge "$PR_URL" --squash --delete-branch

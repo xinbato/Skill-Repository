@@ -574,6 +574,26 @@ eval(payload)
         self.assertIn("Hành động", body)
         self.assertIn("Cập nhật nội dung (Upstream Drift)", body)
 
+    def test_security_scans_nested_and_js_scripts(self):
+        """Ensure security scanner checks nested scripts and .js/.mjs/.ts files."""
+        with tempfile.TemporaryDirectory() as tmp:
+            skill_dir = Path(tmp) / "js-and-nested"
+            (skill_dir / "scripts" / "sub").mkdir(parents=True)
+            (skill_dir / "SKILL.md").write_text("---\nname: js-and-nested\ndescription: Test. Use when testing.\n---\n", encoding="utf-8")
+            (skill_dir / "scripts" / "helper.js").write_text("eval('1+1');\n", encoding="utf-8")
+            (skill_dir / "scripts" / "sub" / "evil.py").write_text("exec('pass')\n", encoding="utf-8")
+            rep = scan_skill_directory(skill_dir)
+            self.assertFalse(rep.is_safe)
+            self.assertTrue(any("helper.js" in err for err in rep.critical_errors))
+            self.assertTrue(any("evil.py" in err for err in rep.critical_errors))
+
+    def test_validate_skills_parses_multiline_description(self):
+        """Ensure validate_skills.parse_frontmatter extracts full multiline descriptions."""
+        import validate_skills
+        content = "---\nname: demo\ndescription: |\n  Line one.\n  Line two.\n---\n"
+        fm = validate_skills.parse_frontmatter(content)
+        self.assertEqual(fm.get("description"), "Line one.\nLine two.")
+
 
 if __name__ == "__main__":
     unittest.main()
