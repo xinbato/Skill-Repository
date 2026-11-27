@@ -226,6 +226,7 @@ Pre-configured slash commands for the development lifecycle:
 | **[`agent-platform-autorater-customization`](skills/google/agent-platform-autorater-customization/)** | Customizes an autorater (evaluation metric) for an AI agent so its grades match the user's own judgment, starting from the agent's real trajectorie... | Google Ecosystem | [Explore](skills/google/agent-platform-autorater-customization/SKILL.md) |
 | **[`agent-platform-deploy`](skills/google/agent-platform-deploy/)** | Deploy open models or custom weights from Model Garden to Agent Platform endpoints, check the status of an in-progress deployment operation, or cle... | Google Ecosystem | [Explore](skills/google/agent-platform-deploy/SKILL.md) |
 | **[`agent-platform-endpoint-management`](skills/google/agent-platform-endpoint-management/)** | Manages Agent Platform serving endpoints. Use when you need to create, list, describe, update, or delete serving endpoints for model deployment on ... | Google Ecosystem | [Explore](skills/google/agent-platform-endpoint-management/SKILL.md) |
+| **[`agent-platform-eval-flywheel`](skills/google/agent-platform-eval-flywheel/)** | Measures and improves the quality of AI models and agents on Google Cloud using the Eval Quality Flywheel methodology. Use when generating syntheti... | Google Ecosystem | [Explore](skills/google/agent-platform-eval-flywheel/SKILL.md) |
 
 ---
 

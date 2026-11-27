@@ -51,6 +51,16 @@
       "content_sha": "1df9274b66a1ca787a168cfb07d6693526ed25e82bd685f0047b0dbe02a6ec50",
       "commit_sha": "",
       "last_sync": "2026-11-25T09:41:12.138500+00:00"
+    },
+    "agent-platform-eval-flywheel": {
+      "skill_name": "agent-platform-eval-flywheel",
+      "category": "google",
+      "source_repo": "google/skills",
+      "source_path": "skills/cloud/agent-platform-eval-flywheel",
+      "branch": "main",
+      "content_sha": "fb2365018e65d072ca84d474e064ec5bd657a0f3587d6eff2cf181ca56dadc28",
+      "commit_sha": "",
+      "last_sync": "2026-11-27T09:31:56.438296+00:00"
     }
   }
 }
